@@ -37,12 +37,8 @@ public class User {
 	
 	private USER_ROLE role;
 	
-	@Column(columnDefinition = "TEXT")
-	private String bio;
-	
 	private String profile_image;
 	private String address;
-	private String region;
 	
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime created_at = LocalDateTime.now();
