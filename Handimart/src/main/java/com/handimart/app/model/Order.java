@@ -2,6 +2,7 @@ package com.handimart.app.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
@@ -55,6 +56,9 @@ public class Order {
     
     @Column(columnDefinition = "TEXT")
     private String notes;
+    
+    @OneToMany(mappedBy = "order")
+    private Set<OrderItem> orderItems = new HashSet<>();
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
