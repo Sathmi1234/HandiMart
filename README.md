@@ -34,9 +34,8 @@ HandiMart is a comprehensive e-commerce platform designed specifically for artis
 <div align="center">
   <a href="https://www.figma.com/design/9kqr7Il4fxtK70MgixOznB/Handi-Mart?node-id=0-1&t=SBLcTNFm7i8nNEr1-1" target="_blank">
     <img src="https://github.com/user-attachments/assets/a93731a6-3859-44ef-b2ac-6babc64efdee" alt="HandiMart Figma Design">
-    <h3>📱 View Interactive Prototype in Figma</h3>
   </a>
-  <p><em>Click the image above to explore our complete UI/UX design</em></p>
+  <h3><em>Click the image above to explore our complete UI/UX design</em></h3>
 </div>
 
 ## 📁 Project Structure
