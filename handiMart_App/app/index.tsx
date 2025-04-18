@@ -1,7 +1,10 @@
+import { useRouter } from "expo-router";
 import { Text, View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
 export default function Index() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <View style={styles.topSection}></View>
@@ -9,7 +12,12 @@ export default function Index() {
         <Button mode="contained-tonal" icon="cart" style={styles.btn}>
           I'm Here to Buy
         </Button>
-        <Button mode="contained-tonal" icon="brush" style={styles.btn}>
+        <Button
+          mode="contained-tonal"
+          icon="brush"
+          style={styles.btn}
+          onPress={() => router.push("/(auth)/sign_in")}
+        >
           I'm Here to Sell
         </Button>
       </View>
@@ -33,6 +41,6 @@ const styles = StyleSheet.create({
   },
   btn: {
     margin: 10,
-    width: '80%'
+    width: "80%",
   },
 });
