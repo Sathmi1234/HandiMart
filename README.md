@@ -24,7 +24,7 @@ HandiMart is a comprehensive e-commerce platform designed specifically for artis
 | Component | Technology |
 |-----------|------------|
 | Backend | Spring Boot |
-| Database | MySQL (XAMPP) |
+| Database | MySQL  |
 | Frontend | React Native |
 | Authentication | JWT (JSON Web Tokens) |
 | Storage | File system for images and videos |
@@ -42,7 +42,7 @@ HandiMart is a comprehensive e-commerce platform designed specifically for artis
 
 ```
 handimart/
-├── backend/                # Spring Boot application
+├── handimart_backend/                # Spring Boot application
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/handimart/app/
@@ -57,17 +57,13 @@ handimart/
 │   │   │   └── resources/        # Application properties
 │   │   └── test/                 # Unit and integration tests
 │   └── pom.xml                   # Maven dependencies
-├── frontend/               # React Native application
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── screens/        # Application screens
-│   │   ├── navigation/     # Navigation setup
-│   │   ├── services/       # API clients
-│   │   ├── store/          # State management
-│   │   ├── utils/          # Helper functions
-│   │   └── assets/         # Images, fonts, etc.
-│   ├── package.json        # NPM dependencies
-│   └── App.js              # Application entry point
+├── handimart_app/               # React Native application
+│   ├── app/             # Application entry point & Screens
+│   ├── components/     # Reusable UI components
+│   ├── services/       # API clients
+│   ├── utils/          # Helper functions
+│   ├── assets/         # Images, fonts, etc.
+│   └── package.json        # NPM dependencies
 └── README.md               # Project documentation
 ```
 
@@ -121,9 +117,7 @@ The application uses the following key entities:
    ```
 2. Run the application:
    ```bash
-   npx react-native run-android
-   # or
-   npx react-native run-ios
+   npx expo start --go
    ```
 
 ## 📚 API Documentation
@@ -149,5 +143,5 @@ This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgements
 
-- ABC Creative Collective for the project requirements
+- ABC Creative Collective for the project requirements(Assumption)
 - Inspired by platforms like Etsy and Amazon Handmade
