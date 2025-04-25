@@ -9,7 +9,12 @@ export default function Index() {
     <View style={styles.container}>
       <View style={styles.topSection}></View>
       <View style={styles.bottomSection}>
-        <Button mode="contained-tonal" icon="cart" style={styles.btn}>
+        <Button 
+          mode="contained-tonal" 
+          icon="cart" 
+          style={styles.btn}
+          onPress={()=> router.push("/(tabs)/")}
+        >
           I'm Here to Buy
         </Button>
         <Button
