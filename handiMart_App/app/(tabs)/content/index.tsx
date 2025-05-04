@@ -6,18 +6,33 @@ import {
   FlatList,
   Image,
   TouchableOpacity
-} from 'react-native'; 
-import { useNavigation } from '@react-navigation/native';
+} from 'react-native';
+
+// Define types
+interface ContentItem {
+  id: string;
+  title: string;
+  author: string;
+  thumbnail: any;
+  type: string;
+  postedTime: string;
+}
+
+interface SellerItem {
+  id: string;
+  name: string;
+  image: any;
+  subscribers: string;
+}
 
 export default function ContentScreen() {
-  const navigation = useNavigation();
   
-  const contentItems = [
+  const contentItems: ContentItem[] = [
     {
       id: '1',
       title: 'Concept Art Process',
       author: 'Alice',
-      thumbnail: require('../../assets/images/icon.png'),
+      thumbnail: require('../../../assets/images/icon.png'),
       type: 'tutorial',
       postedTime: '2 days ago'
     },
@@ -25,7 +40,7 @@ export default function ContentScreen() {
       id: '2',
       title: 'Advanced Composition',
       author: 'Alice',
-      thumbnail: require('../../assets/images/icon.png'),
+      thumbnail: require('../../../assets/images/icon.png'),
       type: 'tutorial',
       postedTime: '1 week ago'
     },
@@ -33,23 +48,23 @@ export default function ContentScreen() {
       id: '3',
       title: 'Lighting Techniques',
       author: 'Alice',
-      thumbnail: require('../../assets/images/icon.png'),
+      thumbnail: require('../../../assets/images/icon.png'),
       type: 'tutorial',
       postedTime: '3 weeks ago'
     }
   ];
   
-  const selleItems = [
-    { id: 'bio1', name: 'Alice', image: require('../../assets/images/icon.png'), subscribers: '120K subscribers' },
-    { id: 'bio2', name: 'Bob', image: require('../../assets/images/icon.png'), subscribers: '45K subscribers' },
-    { id: 'bio3', name: 'Charlie', image: require('../../assets/images/icon.png'), subscribers: '89K subscribers' }
+  const sellerItems: SellerItem[] = [
+    { id: 'bio1', name: 'Alice', image: require('../../../assets/images/icon.png'), subscribers: '120K subscribers' },
+    { id: 'bio2', name: 'Bob', image: require('../../../assets/images/icon.png'), subscribers: '45K subscribers' },
+    { id: 'bio3', name: 'Charlie', image: require('../../../assets/images/icon.png'), subscribers: '89K subscribers' }
   ];
   
   return (
     <>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Content Posts</Text>
-        <TouchableOpacity>
+        <TouchableOpacity >
           <Text style={styles.moreButton}>MORE</Text>
         </TouchableOpacity>
       </View>
@@ -89,7 +104,7 @@ export default function ContentScreen() {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={selleItems}
+        data={sellerItems}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
