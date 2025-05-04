@@ -6,9 +6,9 @@ import {
   FlatList,
   Image,
   TouchableOpacity
-} from 'react-native';
+} from 'react-native'; 
+import { useRouter } from 'expo-router';
 
-// Define types
 interface ContentItem {
   id: string;
   title: string;
@@ -26,6 +26,7 @@ interface SellerItem {
 }
 
 export default function ContentScreen() {
+  const router = useRouter();
   
   const contentItems: ContentItem[] = [
     {
@@ -64,7 +65,7 @@ export default function ContentScreen() {
     <>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Content Posts</Text>
-        <TouchableOpacity >
+        <TouchableOpacity onPress={() => router.push('/content/posts')}>
           <Text style={styles.moreButton}>MORE</Text>
         </TouchableOpacity>
       </View>
@@ -97,7 +98,7 @@ export default function ContentScreen() {
       
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Popular Creators</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push('/content/sellers')}>
           <Text style={styles.moreButton}>MORE</Text>
         </TouchableOpacity>
       </View>

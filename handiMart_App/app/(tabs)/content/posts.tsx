@@ -9,12 +9,11 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 
-// Define types
 interface ContentItem {
   id: string;
   title: string;
   author: string;
-  thumbnail: any; // Using 'any' for image require statements
+  thumbnail: any;
   type: string;
   postedTime: string;
 }
@@ -22,7 +21,6 @@ interface ContentItem {
 export default function ContentPostsScreen() {
   const router = useRouter();
 
-  // This could come from a context, API call, or props in a real app
   const contentItems: ContentItem[] = [
     {
       id: '1',
@@ -97,7 +95,6 @@ export default function ContentPostsScreen() {
             <TouchableOpacity 
               style={styles.contentItem}
               onPress={() => {
-                // Navigate to content detail view (to be implemented)
                 console.log(`Selected content: ${item.title}`);
               }}
             >
@@ -139,6 +136,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginRight: 16,
+    backgroundColor: '#E6F0FF',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
   backButtonText: {
     fontSize: 16,
