@@ -144,12 +144,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    justifyContent: 'space-between',
+    paddingVertical: 5,
+    backgroundColor: "#fff",
+    elevation: 2,
+    justifyContent: "space-between",
   },
   backButton: {
     padding: 8,
@@ -160,9 +161,9 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "left",
   },
   searchButton: {
     padding: 8,
