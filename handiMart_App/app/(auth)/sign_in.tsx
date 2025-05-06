@@ -11,6 +11,7 @@ export default function SignIn() {
   const handleSignIn = () => {
     // Implement sign in logic here
     console.log("Sign in:", { email, password });
+    router.push("/(tabs)");
   };
 
   return (
