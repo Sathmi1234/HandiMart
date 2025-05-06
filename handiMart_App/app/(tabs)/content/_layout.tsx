@@ -5,6 +5,9 @@ export default function ContentLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="posts" />
+      <Stack.Screen name="sellers" />
+      <Stack.Screen name="post/[id]" />
+      <Stack.Screen name="seller/[id]" />
     </Stack>
   );
-} 
+}
