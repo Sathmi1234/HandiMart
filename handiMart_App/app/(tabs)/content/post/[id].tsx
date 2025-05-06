@@ -24,7 +24,7 @@ const mockContentPosts = {
       name: 'Digital Art Brushes Package',
       price: 24.99,
       seller: {
-        id: 201,
+        id: 'bio1',
         name: 'Alice',
         profileImage: require('../../../../assets/images/icon.png')
       }
@@ -44,7 +44,7 @@ const mockContentPosts = {
       name: 'Composition Framework Templates',
       price: 19.99,
       seller: {
-        id: 201,
+        id: 'bio1',
         name: 'Alice',
         profileImage: require('../../../../assets/images/icon.png')
       }
@@ -65,7 +65,7 @@ const mockContentPosts = {
       name: 'Lighting Effects Pack',
       price: 29.99,
       seller: {
-        id: 201,
+        id: 'bio1',
         name: 'Alice',
         profileImage: require('../../../../assets/images/icon.png')
       }
@@ -85,7 +85,7 @@ const mockContentPosts = {
       name: 'Color Theory Workbook',
       price: 15.99,
       seller: {
-        id: 202,
+        id: 'bio2',
         name: 'Bob',
         profileImage: require('../../../../assets/images/icon.png')
       }
@@ -96,27 +96,6 @@ const mockContentPosts = {
   }
 };
 
-// Format date helper function
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  
-  const diffTime = Math.abs(now - date);
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 0) {
-    return 'Today';
-  } else if (diffDays === 1) {
-    return 'Yesterday';
-  } else if (diffDays < 7) {
-    return `${diffDays} days ago`;
-  } else if (diffDays < 30) {
-    return `${Math.floor(diffDays / 7)} weeks ago`;
-  } else {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options);
-  }
-};
 
 export default function ContentPostDetails() {
   const [contentPost, setContentPost] = useState(null);
@@ -188,7 +167,6 @@ export default function ContentPostDetails() {
       {/* Content Info */}
       <View style={styles.contentInfo}>
         <Text style={styles.title}>{contentPost.title}</Text>
-        <Text style={styles.date}>{formatDate(contentPost.createdAt)}</Text>
         
         {/* Creator Info */}
         <View style={styles.creatorContainer}>
@@ -211,7 +189,9 @@ export default function ContentPostDetails() {
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.subscribeButton}>
-            <Text style={styles.subscribeText}>SUBSCRIBE</Text>
+            <View style={styles.inboxIconContainer}>
+                      <Text style={styles.inboxIcon}>✉️</Text>
+                    </View>
           </TouchableOpacity>
         </View>
         
@@ -372,16 +352,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#606060',
   },
-  subscribeButton: {
-    backgroundColor: '#CC0000',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 2,
+  inboxIconContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  subscribeText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
+  inboxIcon: {
+    fontSize: 24,
   },
   productContainer: {
     marginVertical: 16,
