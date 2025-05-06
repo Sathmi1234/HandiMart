@@ -92,14 +92,14 @@ export default function YourBids() {
     return bid.status === filter;
   });
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: String) => {
     return status === 'winning' ? '#4CAF50' : '#F44336';
   };
 
   // Handler for navigating to individual bid details
   const handleBidPress = (bidId) => {
     router.push({
-      pathname: `/bids/${bidId}`,
+      pathname: `/(tabs)/bids/${bidId}`,
     });
   };
 

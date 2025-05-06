@@ -142,7 +142,7 @@ export default function TrendingBids() {
   // Handler for navigating to individual bid details
   const handleBidPress = (bidId) => {
     router.push({
-      pathname: `/bids/${bidId}`,
+      pathname: `/(tabs)/bids/${bidId}`,
     });
   };
 
