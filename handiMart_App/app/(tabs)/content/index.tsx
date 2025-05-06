@@ -8,6 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native'; 
 import { useRouter } from 'expo-router';
+import { IconButton } from 'react-native-paper';
 
 interface ContentItem {
   id: string;
@@ -63,6 +64,14 @@ export default function ContentScreen() {
   
   return (
     <>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Content</Text>
+        <IconButton
+          icon="magnify"
+          size={24}
+          onPress={() => console.log("Search pressed")}
+        />
+      </View>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Content Posts</Text>
         <TouchableOpacity onPress={() => router.push('/content/posts')}>
@@ -142,6 +151,21 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    backgroundColor: "#fff",
+    elevation: 2,
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    flex: 1,
+    textAlign: "left",
   },
   moreButton: {
     color: '#065FD4',
