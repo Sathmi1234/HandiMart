@@ -95,7 +95,10 @@ export default function ContentPostsScreen() {
             <TouchableOpacity 
               style={styles.contentItem}
               onPress={() => {
-                console.log(`Selected content: ${item.title}`);
+                // Navigate to content post details when clicked
+                router.push({
+                  pathname: `/content/post/${item.id}`
+                });
               }}
             >
               <View style={styles.contentLayout}>

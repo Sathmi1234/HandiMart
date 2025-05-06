@@ -12,8 +12,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 
 // Mock data for creators
 const mockCreators = {
-  '201': {
-    id: 201,
+  'bio1': {
+    id: 'bio1',
     name: 'Alice',
     profileImage: require('../../../../assets/images/icon.png'),
     bio: 'Digital artist specializing in concept art and tutorials.',
@@ -24,8 +24,8 @@ const mockCreators = {
       { id: '3', title: 'Lighting Techniques', thumbnail: require('../../../../assets/images/icon.png') },
     ],
   },
-  '202': {
-    id: 202,
+  'bio2': {
+    id: 'bio2',
     name: 'Bob',
     profileImage: require('../../../../assets/images/icon.png'),
     bio: 'Expert in color theory and digital painting techniques.',

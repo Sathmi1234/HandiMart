@@ -18,36 +18,45 @@ interface SellerItem {
 
 export default function SellersScreen() {
   const router = useRouter();
-
-  const sellerItem: SellerItem[] = [
-    { id: 'bio1', name: 'Alice', image: require('../../../assets/images/icon.png'), subscribers: '120K subscribers' },
-    { id: 'bio2', name: 'Bob', image: require('../../../assets/images/icon.png'), subscribers: '45K subscribers' },
+  
+  // Updated seller IDs to match the ones in your CreatorDetails component
+  const sellerItems: SellerItem[] = [
+    { id: 'bio1', name: 'Alice', image: require('../../../assets/images/icon.png'), subscribers: '4.2M subscribers' },
+    { id: 'bio2', name: 'Bob', image: require('../../../assets/images/icon.png'), subscribers: '1.8M subscribers' },
     { id: 'bio3', name: 'Charlie', image: require('../../../assets/images/icon.png'), subscribers: '89K subscribers' },
     { id: 'bio4', name: 'Dave', image: require('../../../assets/images/icon.png'), subscribers: '120K subscribers' },
     { id: 'bio5', name: 'Silva', image: require('../../../assets/images/icon.png'), subscribers: '45K subscribers' },
     { id: 'bio6', name: 'Chad', image: require('../../../assets/images/icon.png'), subscribers: '89K subscribers' }
-
   ];
   
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
         >
           <Text style={styles.backButtonText}>← Back</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>All Sellers</Text>
+        <Text style={styles.headerTitle}>All Creators</Text>
       </View>
       
       <FlatList
-        data={sellerItem}
+        data={sellerItems}
         keyExtractor={(item) => item.id}
         style={styles.list}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity style={styles.sellerItem}>
+            <TouchableOpacity
+              style={styles.sellerItem}
+              onPress={() => {
+                // Navigate to creator profile when clicked
+                // Using the [sellerid].tsx file that exists in your project structure
+                router.push({
+                  pathname: `/content/seller/${item.id}`
+                });
+              }}
+            >
               <Image
                 source={item.image}
                 style={styles.creatorAvatar}
@@ -88,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6F0FF',
     paddingVertical: 4,
     paddingHorizontal: 8,
+    borderRadius: 4,
   },
   backButtonText: {
     fontSize: 16,

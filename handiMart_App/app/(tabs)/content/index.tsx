@@ -85,7 +85,15 @@ export default function ContentScreen() {
           if (!item || !item.thumbnail) return null;
           
           return (
-            <TouchableOpacity style={styles.contentItem}>
+            <TouchableOpacity 
+              style={styles.contentItem}
+              onPress={() => {
+                // Navigate to content post details when clicked
+                router.push({
+                  pathname: `/content/post/${item.id}`
+                });
+              }}
+            >
               <View style={styles.contentLayout}>
                 <Image
                   source={item.thumbnail}
@@ -118,7 +126,15 @@ export default function ContentScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity style={styles.sellerItem}>
+            <TouchableOpacity 
+              style={styles.sellerItem}
+              onPress={() => {
+                // Navigate to creator profile when clicked
+                router.push({
+                  pathname: `/content/seller/${item.id}`
+                });
+              }}
+            >
               <Image
                 source={item.image}
                 style={styles.creatorAvatar}
