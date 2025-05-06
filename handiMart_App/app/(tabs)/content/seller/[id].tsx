@@ -110,6 +110,11 @@ export default function CreatorDetails() {
         <Text style={styles.creatorName}>{creator.name}</Text>
         <Text style={styles.subscriberCount}>{creator.subscribers}</Text>
         <Text style={styles.bio}>{creator.bio}</Text>
+        <TouchableOpacity>
+          <View style={styles.inboxIconContainer}>
+            <Text style={styles.inboxIcon}>✉️</Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Creator's Content */}
@@ -158,6 +163,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6F0FF',
     borderRadius: 4,
     alignSelf: 'flex-start',
+  },  
+  inboxIconContainer: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inboxIcon: {
+    fontSize: 24,
   },
   backButtonText: {
     fontSize: 16,

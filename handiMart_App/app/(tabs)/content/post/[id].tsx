@@ -188,10 +188,10 @@ export default function ContentPostDetails() {
               <Text style={styles.subscriberCount}>4.2M subscribers</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.subscribeButton}>
+          <TouchableOpacity>
             <View style={styles.inboxIconContainer}>
-                      <Text style={styles.inboxIcon}>✉️</Text>
-                    </View>
+              <Text style={styles.inboxIcon}>✉️</Text>
+            </View>
           </TouchableOpacity>
         </View>
         
