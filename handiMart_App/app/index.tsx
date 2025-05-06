@@ -13,7 +13,7 @@ export default function Index() {
           mode="contained-tonal" 
           icon="cart" 
           style={styles.btn}
-          onPress={()=> router.push("/(tabs)/")}
+          onPress={()=> router.push("/(tabs)")}
         >
           I'm Here to Buy
         </Button>
