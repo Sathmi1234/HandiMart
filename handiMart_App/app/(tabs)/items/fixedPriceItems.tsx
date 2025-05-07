@@ -28,11 +28,11 @@ export default function FixedPriceItemsScreen() {
   const [filterModalVisible, setFilterModalVisible] = useState(false);
   const [sortModalVisible, setSortModalVisible] = useState(false);
   const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-  
+
   // Filter states
   const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
   const [selectedConditions, setSelectedConditions] = useState({
-    "New": false,
+    New: false,
     "Open Box": false,
     "Used - Mint": false,
     "Used - Very Good": false,
@@ -40,15 +40,15 @@ export default function FixedPriceItemsScreen() {
   });
   const [selectedAvailability, setSelectedAvailability] = useState({
     "In Stock": false,
-    "Limited": false,
+    Limited: false,
   });
-  
+
   // Sort state
   const [sortOption, setSortOption] = useState("recommended");
-  
+
   // Category state
   const [selectedCategory, setSelectedCategory] = useState("All");
-  
+
   // Sample fixed price item data
   const [originalItems, setOriginalItems] = useState([
     {
@@ -162,53 +162,70 @@ export default function FixedPriceItemsScreen() {
       category: "Accessories",
     },
   ]);
-  
+
   const [displayedItems, setDisplayedItems] = useState([...originalItems]);
-  const categories = ["All", "Electronics", "Home", "Kitchen", "Clothing", "Accessories"];
-  
+  const categories = [
+    "All",
+    "Electronics",
+    "Home",
+    "Kitchen",
+    "Clothing",
+    "Accessories",
+  ];
+
   // Apply all filters, sorting, and search
   useEffect(() => {
     let filteredItems = [...originalItems];
-    
+
     // Apply search filter
     if (searchQuery) {
-      filteredItems = filteredItems.filter(item => 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      filteredItems = filteredItems.filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
-    
+
     // Apply category filter
     if (selectedCategory !== "All") {
-      filteredItems = filteredItems.filter(item => item.category === selectedCategory);
-    }
-    
-    // Apply price range filter
-    filteredItems = filteredItems.filter(item => 
-      item.price >= priceRange.min && item.price <= priceRange.max
-    );
-    
-    // Apply condition filter if any condition is selected
-    const anyConditionSelected = Object.values(selectedConditions).some(Boolean);
-    if (anyConditionSelected) {
-      filteredItems = filteredItems.filter(item => 
-        selectedConditions[item.condition]
+      filteredItems = filteredItems.filter(
+        (item) => item.category === selectedCategory,
       );
     }
-    
+
+    // Apply price range filter
+    filteredItems = filteredItems.filter(
+      (item) => item.price >= priceRange.min && item.price <= priceRange.max,
+    );
+
+    // Apply condition filter if any condition is selected
+    const anyConditionSelected =
+      Object.values(selectedConditions).some(Boolean);
+    if (anyConditionSelected) {
+      filteredItems = filteredItems.filter(
+        (item) => selectedConditions[item.condition],
+      );
+    }
+
     // Apply availability filter if any availability is selected
-    const anyAvailabilitySelected = Object.values(selectedAvailability).some(Boolean);
+    const anyAvailabilitySelected =
+      Object.values(selectedAvailability).some(Boolean);
     if (anyAvailabilitySelected) {
-      filteredItems = filteredItems.filter(item => {
-        if (selectedAvailability["In Stock"] && item.availability === "In Stock") {
+      filteredItems = filteredItems.filter((item) => {
+        if (
+          selectedAvailability["In Stock"] &&
+          item.availability === "In Stock"
+        ) {
           return true;
         }
-        if (selectedAvailability["Limited"] && item.availability.includes("Limited")) {
+        if (
+          selectedAvailability["Limited"] &&
+          item.availability.includes("Limited")
+        ) {
           return true;
         }
         return false;
       });
     }
-    
+
     // Apply sorting
     switch (sortOption) {
       case "recommended":
@@ -229,31 +246,39 @@ export default function FixedPriceItemsScreen() {
       default:
         break;
     }
-    
+
     setDisplayedItems(filteredItems);
-  }, [searchQuery, selectedCategory, priceRange, selectedConditions, selectedAvailability, sortOption, originalItems]);
-  
+  }, [
+    searchQuery,
+    selectedCategory,
+    priceRange,
+    selectedConditions,
+    selectedAvailability,
+    sortOption,
+    originalItems,
+  ]);
+
   const toggleCondition = (condition) => {
     setSelectedConditions({
       ...selectedConditions,
-      [condition]: !selectedConditions[condition]
+      [condition]: !selectedConditions[condition],
     });
   };
-  
+
   const toggleAvailability = (availability) => {
     setSelectedAvailability({
       ...selectedAvailability,
-      [availability]: !selectedAvailability[availability]
+      [availability]: !selectedAvailability[availability],
     });
   };
-  
+
   const handleItemPress = (itemId) => {
     router.push({
       pathname: `/(tabs)/marketplace/${itemId}`,
       params: { type: "fixed" },
     });
   };
-  
+
   // Function to display rating stars
   const renderRatingStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -265,11 +290,11 @@ export default function FixedPriceItemsScreen() {
       `☆`.repeat(5 - fullStars - (hasHalfStar ? 1 : 0))
     );
   };
-  
+
   const resetFilters = () => {
     setPriceRange({ min: 0, max: 1000 });
     setSelectedConditions({
-      "New": false,
+      New: false,
       "Open Box": false,
       "Used - Mint": false,
       "Used - Very Good": false,
@@ -277,7 +302,7 @@ export default function FixedPriceItemsScreen() {
     });
     setSelectedAvailability({
       "In Stock": false,
-      "Limited": false,
+      Limited: false,
     });
     setFilterModalVisible(false);
   };
@@ -286,14 +311,10 @@ export default function FixedPriceItemsScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <IconButton 
-          icon="arrow-left" 
-          size={24} 
-          onPress={() => router.back()} 
-        />
+        <IconButton icon="arrow-left" size={24} onPress={() => router.back()} />
         <Text style={styles.headerTitle}>Buy Now Items</Text>
       </View>
-      
+
       {/* Search and Filter Bar */}
       <View style={styles.searchContainer}>
         <Searchbar
@@ -303,84 +324,91 @@ export default function FixedPriceItemsScreen() {
           style={styles.searchBar}
         />
       </View>
-      
+
       {/* Filter Chips */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
+      <View
+        
+        
         style={styles.filterChipsContainer}
-        contentContainerStyle={styles.filterChipsContent}
+      
       >
-        <Chip 
-          icon="filter-variant" 
-          mode="outlined" 
+        <Chip
+          icon="filter-variant"
+          mode="outlined"
           onPress={() => setFilterModalVisible(true)}
           style={styles.filterChip}
         >
           Filters
         </Chip>
-        <Chip 
-          icon="sort" 
-          mode="outlined" 
+        <Chip
+          icon="sort"
+          mode="outlined"
           onPress={() => setSortModalVisible(true)}
           style={styles.filterChip}
         >
-          {sortOption === "recommended" ? "Recommended" : 
-           sortOption === "priceLowToHigh" ? "Price: Low to High" :
-           sortOption === "priceHighToLow" ? "Price: High to Low" :
-           sortOption === "topRated" ? "Top Rated" : "Most Reviewed"}
+          {sortOption === "recommended"
+            ? "Recommended"
+            : sortOption === "priceLowToHigh"
+              ? "Price: Low to High"
+              : sortOption === "priceHighToLow"
+                ? "Price: High to Low"
+                : sortOption === "topRated"
+                  ? "Top Rated"
+                  : "Most Reviewed"}
         </Chip>
-        <Chip 
-          icon="shape" 
-          mode="outlined" 
+        <Chip
+          icon="shape"
+          mode="outlined"
           onPress={() => setCategoryModalVisible(true)}
           style={styles.filterChip}
         >
           {selectedCategory}
         </Chip>
-      </ScrollView>
-      
+      </View>
+
       {/* Active Filters Display */}
-      {(selectedCategory !== "All" || 
-        Object.values(selectedConditions).some(Boolean) || 
+      {(selectedCategory !== "All" ||
+        Object.values(selectedConditions).some(Boolean) ||
         Object.values(selectedAvailability).some(Boolean) ||
-        priceRange.min > 0 || 
+        priceRange.min > 0 ||
         priceRange.max < 1000) && (
         <View style={styles.activeFiltersContainer}>
           <Text style={styles.activeFiltersText}>Active Filters:</Text>
           {selectedCategory !== "All" && (
-            <Chip 
-              onClose={() => setSelectedCategory("All")} 
+            <Chip
+              onClose={() => setSelectedCategory("All")}
               style={styles.activeFilterChip}
             >
               {selectedCategory}
             </Chip>
           )}
-          {Object.entries(selectedConditions).map(([condition, isSelected]) => (
-            isSelected && (
-              <Chip 
-                key={condition}
-                onClose={() => toggleCondition(condition)} 
-                style={styles.activeFilterChip}
-              >
-                {condition}
-              </Chip>
-            )
-          ))}
-          {Object.entries(selectedAvailability).map(([availability, isSelected]) => (
-            isSelected && (
-              <Chip 
-                key={availability}
-                onClose={() => toggleAvailability(availability)} 
-                style={styles.activeFilterChip}
-              >
-                {availability}
-              </Chip>
-            )
-          ))}
+          {Object.entries(selectedConditions).map(
+            ([condition, isSelected]) =>
+              isSelected && (
+                <Chip
+                  key={condition}
+                  onClose={() => toggleCondition(condition)}
+                  style={styles.activeFilterChip}
+                >
+                  {condition}
+                </Chip>
+              ),
+          )}
+          {Object.entries(selectedAvailability).map(
+            ([availability, isSelected]) =>
+              isSelected && (
+                <Chip
+                  key={availability}
+                  onClose={() => toggleAvailability(availability)}
+                  style={styles.activeFilterChip}
+                >
+                  {availability}
+                </Chip>
+              ),
+          )}
           {(priceRange.min > 0 || priceRange.max < 1000) && (
-            <Chip 
-              onClose={() => setPriceRange({ min: 0, max: 1000 })} 
+            <Chip
+              onClose={() => setPriceRange({ min: 0, max: 1000 })}
               style={styles.activeFilterChip}
             >
               ${priceRange.min} - ${priceRange.max}
@@ -388,7 +416,7 @@ export default function FixedPriceItemsScreen() {
           )}
         </View>
       )}
-      
+
       {/* Items Grid */}
       <ScrollView style={styles.itemsContainer}>
         <View style={styles.itemsGrid}>
@@ -408,7 +436,9 @@ export default function FixedPriceItemsScreen() {
                   <Text style={styles.cardTitle}>{item.title}</Text>
                   <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
                   <View style={styles.ratingContainer}>
-                    <Text style={styles.ratingStars}>{renderRatingStars(item.rating)}</Text>
+                    <Text style={styles.ratingStars}>
+                      {renderRatingStars(item.rating)}
+                    </Text>
                     <Text style={styles.reviewCount}>({item.reviewCount})</Text>
                   </View>
                   <View style={styles.itemFooter}>
@@ -423,8 +453,8 @@ export default function FixedPriceItemsScreen() {
                       {item.availability}
                     </Badge>
                   </View>
-                  <Chip 
-                    style={styles.categoryChip} 
+                  <Chip
+                    style={styles.categoryChip}
                     textStyle={styles.categoryChipText}
                   >
                     {item.category}
@@ -434,7 +464,9 @@ export default function FixedPriceItemsScreen() {
             ))
           ) : (
             <View style={styles.noResultsContainer}>
-              <Text style={styles.noResultsText}>No items match your filters</Text>
+              <Text style={styles.noResultsText}>
+                No items match your filters
+              </Text>
               <Button mode="contained" onPress={resetFilters}>
                 Reset Filters
               </Button>
@@ -442,7 +474,7 @@ export default function FixedPriceItemsScreen() {
           )}
         </View>
       </ScrollView>
-      
+
       {/* Filter Modal */}
       <Modal
         visible={filterModalVisible}
@@ -461,28 +493,40 @@ export default function FixedPriceItemsScreen() {
               />
             </View>
             <Divider />
-            
+
             <ScrollView style={styles.modalScrollView}>
               {/* Price Range */}
               <List.Section>
                 <List.Subheader>Price Range</List.Subheader>
                 <View style={styles.priceRangeContainer}>
-                  <Button 
-                    mode={priceRange.min === 0 && priceRange.max === 100 ? "contained" : "outlined"}
+                  <Button
+                    mode={
+                      priceRange.min === 0 && priceRange.max === 100
+                        ? "contained"
+                        : "outlined"
+                    }
                     onPress={() => setPriceRange({ min: 0, max: 100 })}
                     style={styles.priceButton}
                   >
                     $0-$100
                   </Button>
-                  <Button 
-                    mode={priceRange.min === 100 && priceRange.max === 250 ? "contained" : "outlined"}
+                  <Button
+                    mode={
+                      priceRange.min === 100 && priceRange.max === 250
+                        ? "contained"
+                        : "outlined"
+                    }
                     onPress={() => setPriceRange({ min: 100, max: 250 })}
                     style={styles.priceButton}
                   >
                     $100-$250
                   </Button>
-                  <Button 
-                    mode={priceRange.min === 250 && priceRange.max === 1000 ? "contained" : "outlined"}
+                  <Button
+                    mode={
+                      priceRange.min === 250 && priceRange.max === 1000
+                        ? "contained"
+                        : "outlined"
+                    }
                     onPress={() => setPriceRange({ min: 250, max: 1000 })}
                     style={styles.priceButton}
                   >
@@ -490,9 +534,9 @@ export default function FixedPriceItemsScreen() {
                   </Button>
                 </View>
               </List.Section>
-              
+
               <Divider />
-              
+
               {/* Condition */}
               <List.Section>
                 <List.Subheader>Condition</List.Subheader>
@@ -502,7 +546,11 @@ export default function FixedPriceItemsScreen() {
                     title={condition}
                     left={() => (
                       <Checkbox
-                        status={selectedConditions[condition] ? "checked" : "unchecked"}
+                        status={
+                          selectedConditions[condition]
+                            ? "checked"
+                            : "unchecked"
+                        }
                         onPress={() => toggleCondition(condition)}
                       />
                     )}
@@ -510,9 +558,9 @@ export default function FixedPriceItemsScreen() {
                   />
                 ))}
               </List.Section>
-              
+
               <Divider />
-              
+
               {/* Availability */}
               <List.Section>
                 <List.Subheader>Availability</List.Subheader>
@@ -522,7 +570,11 @@ export default function FixedPriceItemsScreen() {
                     title={availability}
                     left={() => (
                       <Checkbox
-                        status={selectedAvailability[availability] ? "checked" : "unchecked"}
+                        status={
+                          selectedAvailability[availability]
+                            ? "checked"
+                            : "unchecked"
+                        }
                         onPress={() => toggleAvailability(availability)}
                       />
                     )}
@@ -531,14 +583,14 @@ export default function FixedPriceItemsScreen() {
                 ))}
               </List.Section>
             </ScrollView>
-            
+
             <Divider />
             <View style={styles.modalButtons}>
               <Button mode="outlined" onPress={resetFilters}>
                 Reset
               </Button>
-              <Button 
-                mode="contained" 
+              <Button
+                mode="contained"
                 onPress={() => setFilterModalVisible(false)}
               >
                 Apply
@@ -547,7 +599,7 @@ export default function FixedPriceItemsScreen() {
           </View>
         </View>
       </Modal>
-      
+
       {/* Sort Modal */}
       <Modal
         visible={sortModalVisible}
@@ -566,22 +618,28 @@ export default function FixedPriceItemsScreen() {
               />
             </View>
             <Divider />
-            
+
             <RadioButton.Group
               onValueChange={(value) => setSortOption(value)}
               value={sortOption}
             >
               <RadioButton.Item label="Recommended" value="recommended" />
-              <RadioButton.Item label="Price: Low to High" value="priceLowToHigh" />
-              <RadioButton.Item label="Price: High to Low" value="priceHighToLow" />
+              <RadioButton.Item
+                label="Price: Low to High"
+                value="priceLowToHigh"
+              />
+              <RadioButton.Item
+                label="Price: High to Low"
+                value="priceHighToLow"
+              />
               <RadioButton.Item label="Top Rated" value="topRated" />
               <RadioButton.Item label="Most Reviewed" value="mostReviewed" />
             </RadioButton.Group>
-            
+
             <Divider />
             <View style={styles.modalButtons}>
-              <Button 
-                mode="contained" 
+              <Button
+                mode="contained"
                 onPress={() => setSortModalVisible(false)}
               >
                 Apply
@@ -590,7 +648,7 @@ export default function FixedPriceItemsScreen() {
           </View>
         </View>
       </Modal>
-      
+
       {/* Category Modal */}
       <Modal
         visible={categoryModalVisible}
@@ -609,20 +667,24 @@ export default function FixedPriceItemsScreen() {
               />
             </View>
             <Divider />
-            
+
             <RadioButton.Group
               onValueChange={(value) => setSelectedCategory(value)}
               value={selectedCategory}
             >
               {categories.map((category) => (
-                <RadioButton.Item key={category} label={category} value={category} />
+                <RadioButton.Item
+                  key={category}
+                  label={category}
+                  value={category}
+                />
               ))}
             </RadioButton.Group>
-            
+
             <Divider />
             <View style={styles.modalButtons}>
-              <Button 
-                mode="contained" 
+              <Button
+                mode="contained"
                 onPress={() => setCategoryModalVisible(false)}
               >
                 Apply
@@ -643,7 +705,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingBottom: 5,
     paddingHorizontal: 16,
     backgroundColor: "#ffffff",
     borderBottomWidth: 1,
@@ -672,17 +733,18 @@ const styles = StyleSheet.create({
   },
   filterChipsContainer: {
     backgroundColor: "#ffffff",
-    paddingVertical: 8,
+    height: 44,
+    flexDirection: "row", 
+    alignItems: "center", 
+    paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
-  },
-  filterChipsContent: {
-    paddingHorizontal: 12,
-    gap: 8,
   },
   filterChip: {
     marginRight: 8,
     backgroundColor: "#f0f0f0",
+    height: 36, 
+    paddingVertical: 0, 
   },
   activeFiltersContainer: {
     flexDirection: "row",
