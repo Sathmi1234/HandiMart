@@ -147,7 +147,7 @@ export default function ItemsScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Auction Items</Text>
             <TouchableOpacity
-              onPress={() => router.push("/(tabs)/marketplace/auctions")}
+              onPress={() => router.push("/(tabs)/items/auctionItems")}
             >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
@@ -191,7 +191,7 @@ export default function ItemsScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Buy Now</Text>
             <TouchableOpacity
-              onPress={() => router.push("/(tabs)/marketplace/fixed")}
+              onPress={() => router.push("/(tabs)/items/fixedPriceItems")}
             >
               <Text style={styles.seeAllText}>See All</Text>
             </TouchableOpacity>
