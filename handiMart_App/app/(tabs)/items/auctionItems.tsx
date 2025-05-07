@@ -256,12 +256,7 @@ export default function AuctionItemsScreen() {
       </View>
       
       {/* Filter Chips */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterChipsContainer}
-        contentContainerStyle={styles.filterChipsContent}
-      >
+      <View style={styles.filterChipsContainer}>
         <Chip 
           icon="filter-variant" 
           mode="outlined" 
@@ -288,7 +283,7 @@ export default function AuctionItemsScreen() {
         >
           {selectedCategory}
         </Chip>
-      </ScrollView>
+      </View>
       
       {/* Active Filters Display */}
       {(selectedCategory !== "All" || 
@@ -574,7 +569,12 @@ const styles = StyleSheet.create({
   filterChipsContainer: {
     backgroundColor: "#fff",
     paddingBottom: 10,
-    height: 10
+    height: 44,
+    flexDirection: "row",
+    alignItems: "center", 
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
   },
   filterChipsContent: {
     paddingHorizontal: 10,
