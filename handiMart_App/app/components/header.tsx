@@ -28,20 +28,20 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
       )}
       
       <View style={styles.headerRight}>
-        <Feather 
-          name="shopping-cart" 
-          size={24} 
-          color="black" 
-          style={styles.icon} 
-          onPress={() => console.log('Cart pressed')}
+        <Feather
+           name="shopping-cart"
+           size={24}
+           color="black"
+           style={styles.icon}
+           onPress={() => router.push('/notification/cart')}
         />
-        <Feather 
-          name="bell" 
-          size={24} 
-          color="black" 
-          style={styles.icon} 
-          onPress={() => console.log('Notifications pressed')}
-        />
+        <Feather
+            name="bell"
+            size={24}
+            color="black"
+            style={styles.icon}
+            onPress={() => router.push('/notification')}
+         />
       </View>
     </Appbar.Header>
   );
