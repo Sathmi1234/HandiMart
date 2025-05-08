@@ -8,24 +8,24 @@ import Header from '../components/header';
 const initialCartItems = [
   {
     id: '1',
-    name: 'Fresh Apples',
+    name: 'Dreamecatcher',
     price: 4.99,
     quantity: 2,
-    image: 'apple.jpg',
+    image: 'icon.png',
   },
   {
     id: '2',
-    name: 'Whole Wheat Bread',
+    name: 'Painting',
     price: 3.49,
     quantity: 1,
-    image: 'bread.jpg',
+    image: 'icon.png',
   },
   {
     id: '3',
-    name: 'Milk (1 Gallon)',
+    name: 'Ornament',
     price: 3.99,
     quantity: 1,
-    image: 'milk.jpg',
+    image: 'icon.png',
   },
 ];
 
@@ -45,6 +45,35 @@ export default function CartScreen() {
     );
     setSubTotal(newSubTotal);
   }, [cartItems]);
+
+  const handleQuantityChange = (id, change) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === id) {
+          const newQuantity = Math.max(1, item.quantity + change);
+          return { ...item, quantity: newQuantity };
+        }
+        return item;
+      })
+    );
+  };
+
+  const removeItem = (id) => {
+    Alert.alert(
+      "Remove Item",
+      "Are you sure you want to remove this item from your cart?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Remove", 
+          onPress: () => {
+            setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+          },
+          style: "destructive"
+        }
+      ]
+    );
+  };
 
   const renderCartItem = ({ item }) => (
     <Card style={styles.cartItem}>
