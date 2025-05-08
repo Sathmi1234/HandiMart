@@ -33,7 +33,7 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
            size={24}
            color="black"
            style={styles.icon}
-           onPress={() => router.push('/notification/cart')}
+           onPress={() => router.push('/cart')}
         />
         <Feather
             name="bell"
