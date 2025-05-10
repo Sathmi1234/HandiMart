@@ -154,6 +154,7 @@ export default function CartScreen() {
             <Button
               mode="contained"
               style={styles.checkoutButton}
+              onPress={() => router.push('/checkout')}
             >
               Proceed to Checkout
             </Button>
