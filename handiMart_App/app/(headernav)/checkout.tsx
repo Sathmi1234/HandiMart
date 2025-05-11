@@ -144,6 +144,7 @@ export default function CheckoutScreen() {
         <Button
           mode="contained"
           style={styles.placeOrderButton}
+          onPress={() => router.push('/order-confirmation')}
           disabled={!deliveryAddress || (paymentMethod === 'card' && (!cardNumber || !cardExpiry || !cardCVV || !cardName))}
         >
           Place Order
