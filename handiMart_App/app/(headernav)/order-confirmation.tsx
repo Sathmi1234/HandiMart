@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Button, Card, Divider, IconButton } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -8,105 +8,123 @@ import { TouchableOpacity } from 'react-native';
 
 export default function OrderConfirmationScreen() {
   const router = useRouter();
+  
+  const orderNumber = "HD-" + Math.floor(10000 + Math.random() * 90000);
+  const orderDate = new Date().toLocaleDateString();
+  const estimatedDelivery = new Date(Date.now() + 45 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  const orderItems = [
+    { id: '1', name: 'Fresh Apples', quantity: 2, price: 4.99 },
+    { id: '2', name: 'Whole Wheat Bread', quantity: 1, price: 3.49 },
+    { id: '3', name: 'Milk (1 Gallon)', quantity: 1, price: 3.99 },
+  ];
+  
+  const subtotal = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.07;
+  const deliveryFee = 2.99;
+  const total = subtotal + tax + deliveryFee;
 
   return (
-    <View >
+    <View style={styles.container}>
       <Header/>
-      <View >
+      <View style={styles.header}>
         <TouchableOpacity
+          style={styles.backButton}
           onPress={() => router.back()}
         >
-        <Text >←</Text>
+        <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
-          <Text >Order Confirmation</Text>
+          <Text style={styles.headerTitle}>Order Confirmation</Text>
           <IconButton
             icon="magnify"
             size={24}
             onPress={() => console.log("Search pressed")}
           />
       </View>  
-      <ScrollView >
-        <View >
-          <View >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.successContainer}>
+          <View style={styles.successIconContainer}>
             <MaterialCommunityIcons name="check-circle" size={80} color="#4CAF50" />
           </View>
-          <Text >Order Placed Successfully!</Text>
-          <Text >
+          <Text style={styles.successTitle}>Order Placed Successfully!</Text>
+          <Text style={styles.successText}>
             Thank you for your order. We'll deliver your items shortly.
           </Text>
         </View>
 
-        <Card >
+        <Card style={styles.orderDetailsCard}>
           <Card.Content>
-            <Text >Order Details</Text>
-            <View >
-              <Text >Order Number:</Text>
-              <Text ></Text>
+            <Text style={styles.sectionTitle}>Order Details</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Order Number:</Text>
+              <Text style={styles.detailValue}>{orderNumber}</Text>
             </View>
-            <View >
-              <Text >Order Date:</Text>
-              <Text ></Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Order Date:</Text>
+              <Text style={styles.detailValue}>{orderDate}</Text>
             </View>
-            <View >
-              <Text >Estimated Delivery:</Text>
-              <Text >Today, </Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Estimated Delivery:</Text>
+              <Text style={styles.detailValue}>Today, {estimatedDelivery}</Text>
             </View>
-            <View >
-              <Text >Payment Method:</Text>
-              <Text >Credit Card</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detailLabel}>Payment Method:</Text>
+              <Text style={styles.detailValue}>Credit Card</Text>
             </View>
           </Card.Content>
         </Card>
 
-        <Card >
+        <Card style={styles.itemsCard}>
           <Card.Content>
-            <Text >Order Items</Text>
+            <Text style={styles.sectionTitle}>Order Items</Text>
             
             {orderItems.map((item) => (
               <View key={item.id}>
-                <View >
-                  <View >
-                    <Text >{item.name}</Text>
-                    <Text >Qty: {item.quantity}</Text>
+                <View style={styles.itemRow}>
+                  <View style={styles.itemInfo}>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <Text style={styles.itemQuantity}>Qty: {item.quantity}</Text>
                   </View>
-                  <Text >${(item.price * item.quantity).toFixed(2)}</Text>
+                  <Text style={styles.itemPrice}>${(item.price * item.quantity).toFixed(2)}</Text>
                 </View>
-                <Divider  />
+                <Divider style={styles.divider} />
               </View>
             ))}
             
-            <View >
-              <View >
-                <Text >Subtotal</Text>
-                <Text >$</Text>
+            <View style={styles.summaryContainer}>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Subtotal</Text>
+                <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
               </View>
-              <View >
-                <Text >Tax</Text>
-                <Text >$</Text>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Tax</Text>
+                <Text style={styles.summaryValue}>${tax.toFixed(2)}</Text>
               </View>
-              <View >
-                <Text >Delivery Fee</Text>
-                <Text >$</Text>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Delivery Fee</Text>
+                <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
               </View>
-              <Divider  />
-              <View >
-                <Text >Total</Text>
-                <Text >$</Text>
+              <Divider style={styles.totalDivider} />
+              <View style={styles.summaryRow}>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
               </View>
             </View>
           </Card.Content>
         </Card>
 
-        <View >
+        <View style={styles.actionsContainer}>
           <Button
             mode="contained"
-            onPress={() => router.push('/')}
+            style={styles.button}
+            onPress={() => router.push('/order-tracking')}
           >
             Track Order
           </Button>
           
           <Button
             mode="outlined"
+            style={styles.button}
             onPress={() => router.push('/')}
           >
             Continue Shopping
@@ -116,3 +134,138 @@ export default function OrderConfirmationScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  backButton: {
+    marginRight: 16,
+    backgroundColor: '#E6F0FF',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#065FD4',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    backgroundColor: "#fff",
+    elevation: 2,
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    flex: 1,
+    textAlign: "left",
+  },
+  successContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successIconContainer: {
+    marginBottom: 16,
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  successText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  orderDetailsCard: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  detailLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  detailValue: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  itemsCard: {
+    marginBottom: 16,
+  },
+  itemRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  itemInfo: {
+    flex: 1,
+  },
+  itemName: {
+    fontSize: 16,
+  },
+  itemQuantity: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
+  itemPrice: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  divider: {
+    marginVertical: 4,
+  },
+  totalDivider: {
+    marginVertical: 8,
+  },
+  summaryContainer: {
+    marginTop: 16,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: '#666',
+  },
+  summaryValue: {
+    fontSize: 14,
+  },
+  totalLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  totalValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  actionsContainer: {
+    marginVertical: 16,
+  },
+  button: {
+    marginBottom: 12,
+    paddingVertical: 6,
+  },
+});
