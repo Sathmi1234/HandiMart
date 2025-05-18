@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, Button, ActivityIndicator, ProgressBar, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -75,15 +75,16 @@ export default function OrderTrackingScreen() {
   ];
 
   return (
-    <View >
-        <Header/>
-        <View >
+    <View style={styles.container}>
+              <Header/>
+        <View style={styles.header}>
             <TouchableOpacity
+                style={styles.backButton}
                 onPress={() => router.back()}
             >
-                <Text >←</Text>
+                <Text style={styles.backButtonText}>←</Text>
             </TouchableOpacity>
-            <Text >Order Tracking</Text>
+            <Text style={styles.headerTitle}>Order Tracking</Text>
             <IconButton
                 icon="magnify"
                 size={24}
@@ -91,24 +92,24 @@ export default function OrderTrackingScreen() {
             />
         </View>
 
-      <ScrollView >
-        <Card >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Card style={styles.trackingCard}>
           <Card.Content>
-            <Text >Order #{orderNumber}</Text>
+            <Text style={styles.orderNumber}>Order #{orderNumber}</Text>
             
-            <View >
-              <ProgressBar progress={progress} color="#4CAF50"  />
+            <View style={styles.progressContainer}>
+              <ProgressBar progress={progress} color="#4CAF50" style={styles.progressBar} />
               
-              <View >
+              <View style={styles.stepStatus}>
                 {currentStep < 4 && (
-                  <View >
-                    <ActivityIndicator size="small" color="#4CAF50"  />
-                    <Text >
+                  <View style={styles.estimatedTimeContainer}>
+                    <ActivityIndicator size="small" color="#4CAF50" style={styles.loader} />
+                    <Text style={styles.estimatedTimeText}>
                       {estimatedTime} min until next step
                     </Text>
                   </View>
                 )}
-                <Text >
+                <Text style={styles.statusText}>
                   {currentStep === 4 
                     ? 'Delivered!' 
                     : `Step ${currentStep} of 4: ${orderSteps[currentStep - 1].title}`}
@@ -116,39 +117,56 @@ export default function OrderTrackingScreen() {
               </View>
             </View>
 
-            <View >
+            <View style={styles.stepsContainer}>
               {orderSteps.map((step) => (
-                <View key={step.id} >
+                <View key={step.id} style={styles.step}>
+                  <View 
+                    style={[
+                      styles.stepIcon,
+                      step.completed ? styles.completedStepIcon : 
+                      step.active ? styles.activeStepIcon : styles.pendingStepIcon
+                    ]}
+                  >
                     <MaterialIcons
                       name={step.icon}
                       size={24}
                       color={step.completed || step.active ? '#fff' : '#999'}
                     />
-                  <View >
+                  </View>
+                  <View style={styles.stepInfo}>
+                    <Text 
+                      style={[
+                        styles.stepTitle,
+                        step.completed ? styles.completedStepText : 
+                        step.active ? styles.activeStepText : styles.pendingStepText
+                      ]}
+                    >
                       {step.title}
                     </Text>
-                    <Text >{step.description}</Text>
+                    <Text style={styles.stepDescription}>{step.description}</Text>
+                  </View>
                 </View>
               ))}
             </View>
           </Card.Content>
         </Card>
 
-        <Card >
+        <Card style={styles.orderSummaryCard}>
           <Card.Content>
-            <Text >Order Summary</Text>
+            <Text style={styles.sectionTitle}>Order Summary</Text>
             {orderItems.map((item) => (
-              <View key={item.id} >
-                <Text >{item.name}</Text>
-                <Text >x{item.quantity}</Text>
+              <View key={item.id} style={styles.orderItem}>
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.itemQuantity}>x{item.quantity}</Text>
               </View>
             ))}
           </Card.Content>
         </Card>
 
-        <View >
+        <View style={styles.buttonContainer}>
           <Button 
             mode="contained" 
+            style={styles.hButton}
             onPress={() => router.push('/(tabs)')}
           >
             Home
@@ -157,6 +175,7 @@ export default function OrderTrackingScreen() {
           {currentStep === 4 && (
             <Button
               mode="outlined"
+              style={styles.homeButton}
               onPress={() => router.push('/(tabs)')}
             >
               Return to Home
@@ -167,3 +186,160 @@ export default function OrderTrackingScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 32,
+  },
+  backButton: {
+    marginRight: 16,
+    backgroundColor: '#E6F0FF',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#065FD4',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    backgroundColor: "#fff",
+    elevation: 2,
+    justifyContent: "space-between",
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    flex: 1,
+    textAlign: "left",
+  },
+  trackingCard: {
+    marginBottom: 16,
+    borderRadius: 12,
+    elevation: 2,
+  },
+  orderNumber: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  progressContainer: {
+    marginBottom: 24,
+  },
+  progressBar: {
+    height: 8,
+    borderRadius: 4,
+    marginBottom: 10,
+  },
+  stepStatus: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  estimatedTimeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  loader: {
+    marginRight: 8,
+  },
+  estimatedTimeText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  statusText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#4CAF50',
+  },
+  stepsContainer: {
+    marginBottom: 16,
+  },
+  step: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 22,
+  },
+  stepIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  completedStepIcon: {
+    backgroundColor: '#4CAF50',
+  },
+  activeStepIcon: {
+    backgroundColor: '#4CAF50',
+  },
+  pendingStepIcon: {
+    backgroundColor: '#E0E0E0',
+  },
+  stepInfo: {
+    flex: 1,
+  },
+  stepTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  completedStepText: {
+    color: '#4CAF50',
+  },
+  activeStepText: {
+    color: '#4CAF50',
+  },
+  pendingStepText: {
+    color: '#999',
+  },
+  stepDescription: {
+    fontSize: 14,
+    color: '#666',
+  },
+  orderSummaryCard: {
+    marginBottom: 16,
+    borderRadius: 12,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  orderItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  itemName: {
+    fontSize: 15,
+  },
+  itemQuantity: {
+    fontSize: 15,
+    color: '#666',
+  },
+  buttonContainer: {
+    marginTop: 8,
+    gap: 12,
+  },
+  hButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 6,
+  },
+  homeButton: {
+    borderColor: '#4CAF50',
+    paddingVertical: 6,
+  },
+});
