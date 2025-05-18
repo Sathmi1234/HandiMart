@@ -23,10 +23,5 @@ public class ProductService {
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
-    
-    // Read by seller
-    public List<Product> getProductsBySeller(Long sellerId) {
-        return productRepository.findBySellerProductId(sellerId);
-    }
 
 }
