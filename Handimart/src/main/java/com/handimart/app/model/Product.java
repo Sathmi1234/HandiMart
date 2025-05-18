@@ -97,4 +97,171 @@ public class Product {
     public enum ProductStatus {
         DRAFT, ACTIVE, SOLD_OUT, ARCHIVED, UNDER_REVIEW
     }
+
+    
+	public Product() {
+		
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public User getSeller() {
+		return seller;
+	}
+
+	public void setSeller(User seller) {
+		this.seller = seller;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public boolean isBidEnabled() {
+		return bidEnabled;
+	}
+
+	public void setBidEnabled(boolean bidEnabled) {
+		this.bidEnabled = bidEnabled;
+	}
+
+	public BigDecimal getStartingBid() {
+		return startingBid;
+	}
+
+	public void setStartingBid(BigDecimal startingBid) {
+		this.startingBid = startingBid;
+	}
+
+	public LocalDateTime getBidEndTime() {
+		return bidEndTime;
+	}
+
+	public void setBidEndTime(LocalDateTime bidEndTime) {
+		this.bidEndTime = bidEndTime;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public Integer getInventoryCount() {
+		return inventoryCount;
+	}
+
+	public void setInventoryCount(Integer inventoryCount) {
+		this.inventoryCount = inventoryCount;
+	}
+
+	public String getShippingDetails() {
+		return shippingDetails;
+	}
+
+	public void setShippingDetails(String shippingDetails) {
+		this.shippingDetails = shippingDetails;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public boolean isFeatured() {
+		return featured;
+	}
+
+	public void setFeatured(boolean featured) {
+		this.featured = featured;
+	}
+
+	public BigDecimal getAvgRating() {
+		return avgRating;
+	}
+
+	public void setAvgRating(BigDecimal avgRating) {
+		this.avgRating = avgRating;
+	}
+
+	public Integer getTotalReviews() {
+		return totalReviews;
+	}
+
+	public void setTotalReviews(Integer totalReviews) {
+		this.totalReviews = totalReviews;
+	}
+
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
+	}
+
+	public Set<String> getImageUrls() {
+		return imageUrls;
+	}
+
+	public void setImageUrls(Set<String> imageUrls) {
+		this.imageUrls = imageUrls;
+	}
+
+	public ProductStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ProductStatus status) {
+		this.status = status;
+	}
+    
+    
 }
