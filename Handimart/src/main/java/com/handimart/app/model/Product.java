@@ -98,11 +98,6 @@ public class Product {
         DRAFT, ACTIVE, SOLD_OUT, ARCHIVED, UNDER_REVIEW
     }
 
-    
-	public Product() {
-		
-	}
-
 	public Long getProductId() {
 		return productId;
 	}
