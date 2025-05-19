@@ -5,6 +5,7 @@ import com.handimart.app.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,13 @@ public class ProductService {
     // Read by id
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
+    }
+
+    // Create
+    public Product createProduct(Product product) {
+        product.setCreatedAt(LocalDateTime.now());
+        product.setUpdatedAt(LocalDateTime.now());
+        return productRepository.save(product);
     }
 
 }
