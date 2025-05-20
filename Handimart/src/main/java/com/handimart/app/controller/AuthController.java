@@ -2,14 +2,12 @@ package com.handimart.app.controller;
 
 import com.handimart.app.config.JwtProvider;
 import com.handimart.app.model.Cart;
-import com.handimart.app.model.SellerProfile;
 import com.handimart.app.model.USER_ROLE;
 import com.handimart.app.model.User;
 import com.handimart.app.repository.CartRepository;
-import com.handimart.app.repository.SellerRepository;
 import com.handimart.app.repository.UserRepository;
 import com.handimart.app.request.LoginRequest;
-import com.handimart.app.request.SellerSignUpRequest;
+import com.handimart.app.request.UserSignupRequest;
 import com.handimart.app.response.AuthResponse;
 import com.handimart.app.service.CustomerUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 @RestController
 @RequestMapping("/auth")
@@ -49,11 +46,8 @@ public class AuthController {
     @Autowired
     private CartRepository cartRepository;
 
-    @Autowired
-    private SellerRepository sellerRepository;
-
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody UserSignupRequest user) throws Exception {
 
         User isEmailExist = userRepository.findByEmail(user.getEmail());
         if(isEmailExist != null){
@@ -65,14 +59,16 @@ public class AuthController {
         createdUser.setEmail(user.getEmail());
         createdUser.setFirst_name(user.getFirst_name());
         createdUser.setLast_name(user.getLast_name());
-        createdUser.setRole(USER_ROLE.ROLE_CUSTOMER);
+        createdUser.setRole(user.getRole() != null ? user.getRole(): USER_ROLE.ROLE_CUSTOMER);
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(createdUser);
 
-        Cart cart = new Cart();
-        cart.setCartOwner(savedUser);
-        cartRepository.save(cart);
+        if(savedUser.getRole() == USER_ROLE.ROLE_CUSTOMER){
+            Cart cart = new Cart();
+            cart.setCartOwner(savedUser);
+            cartRepository.save(cart);
+        }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -85,65 +81,6 @@ public class AuthController {
         authResponse.setRole(savedUser.getRole());
 
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/seller/signup")
-    public ResponseEntity<AuthResponse> createSellerHandler(@RequestBody SellerSignUpRequest request) throws Exception {
-
-        User isEmailExist = userRepository.findByEmail(request.getUser().getEmail());
-        if(isEmailExist != null){
-            throw new Exception("Email is already in use");
-        }
-
-        User user = request.getUser();
-        User createdUser = new User();
-        createdUser.setUsername(user.getUsername());
-        createdUser.setEmail(user.getEmail());
-        createdUser.setFirst_name(user.getFirst_name());
-        createdUser.setLast_name(user.getLast_name());
-        createdUser.setRole(USER_ROLE.ROLE_SELLER); // Set role as SELLER
-        createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        if (user.getAddress() != null) {
-            createdUser.setAddress(user.getAddress());
-        }
-
-        if (user.getProfile_image() != null) {
-            createdUser.setProfile_image(user.getProfile_image());
-        }
-
-        User savedUser = userRepository.save(createdUser);
-
-        SellerProfile sellerProfile = new SellerProfile();
-        sellerProfile.setUser(savedUser);
-        sellerProfile.setBio(request.getBio());
-        sellerProfile.setRating(0.0);
-        sellerProfile.setRatingCount(0);
-        sellerProfile.setStatus(SellerProfile.SellerStatus.NEW);
-
-        // Initialize tags if provided
-        if (request.getTags() != null && !request.getTags().isEmpty()) {
-            sellerProfile.setTags(new HashSet<>(request.getTags()));
-        }
-
-        SellerRepository.save(sellerProfile);
-
-        Cart cart = new Cart();
-        cart.setCartOwner(savedUser);
-        cartRepository.save(cart);
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = jwtProvider.generateToke(authentication);
-
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(jwt);
-        authResponse.setMessage("Seller registration successful");
-        authResponse.setRole(savedUser.getRole());
-
-        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
-
     }
 
     @PostMapping("/signin")
