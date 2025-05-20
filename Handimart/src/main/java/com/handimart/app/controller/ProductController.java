@@ -15,25 +15,31 @@ import com.handimart.app.service.ProductService;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
-	@Autowired
-	public ProductService productervice;
-	
-	@GetMapping("/")
-	public ResponseEntity<List<Product>> getDepts(){
-		return new ResponseEntity<List<Product>>(productervice.getAllProducts(),HttpStatus.OK);
-	}
-	
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<Product> getProductWithId(@PathVariable Long id) {
-	    Optional<Product> product = productervice.getProductById(id);
-	    if (product.isPresent()) {
-	        return new ResponseEntity<>(product.get(), HttpStatus.OK);
-	    } else {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	    }
-	}
-
-	
+    
+    @Autowired
+    private ProductService productService;
+    
+    // Read all
+    @GetMapping("/")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    }
+    
+    // Read by id
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Optional<Product> product = productService.getProductById(id);
+        if (product.isPresent()) {
+            return new ResponseEntity<>(product.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    // Create
+    @PostMapping("/")
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product createdProduct = productService.createProduct(product);
+        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    }
 }
