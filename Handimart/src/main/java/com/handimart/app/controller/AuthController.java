@@ -7,6 +7,7 @@ import com.handimart.app.model.User;
 import com.handimart.app.repository.CartRepository;
 import com.handimart.app.repository.UserRepository;
 import com.handimart.app.request.LoginRequest;
+import com.handimart.app.request.UserSignupRequest;
 import com.handimart.app.response.AuthResponse;
 import com.handimart.app.service.CustomerUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class AuthController {
     private CartRepository cartRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody UserSignupRequest user) throws Exception {
 
         User isEmailExist = userRepository.findByEmail(user.getEmail());
         if(isEmailExist != null){
@@ -58,14 +59,16 @@ public class AuthController {
         createdUser.setEmail(user.getEmail());
         createdUser.setFirst_name(user.getFirst_name());
         createdUser.setLast_name(user.getLast_name());
-        createdUser.setRole(user.getRole());
+        createdUser.setRole(user.getRole() != null ? user.getRole(): USER_ROLE.ROLE_CUSTOMER);
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(createdUser);
 
-        Cart cart = new Cart();
-        cart.setCartOwner(savedUser);
-        cartRepository.save(cart);
+        if(savedUser.getRole() == USER_ROLE.ROLE_CUSTOMER){
+            Cart cart = new Cart();
+            cart.setCartOwner(savedUser);
+            cartRepository.save(cart);
+        }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);

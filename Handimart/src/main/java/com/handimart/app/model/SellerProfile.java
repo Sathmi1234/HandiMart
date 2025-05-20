@@ -2,6 +2,8 @@ package com.handimart.app.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -28,11 +30,13 @@ public class SellerProfile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long profileID;
-	
+
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
+	@JsonIgnore
 	private User user;
-	
+
+
 	@Column(columnDefinition = "TEXT")
 	private String bio;
 	
