@@ -2,14 +2,11 @@ package com.handimart.app.controller;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import com.handimart.app.model.Product;
 import com.handimart.app.request.ProductRequest;
 import com.handimart.app.response.ProductResponse;
 import com.handimart.app.service.ProductService;
@@ -46,6 +43,49 @@ public class ProductController {
             return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    // Update
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, 
+                                                       @RequestBody ProductRequest request) {
+        try {
+            Optional<ProductResponse> updatedProduct = productService.updateProduct(id, request);
+            if (updatedProduct.isPresent()) {
+                return new ResponseEntity<>(updatedProduct.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    // Partial Update (PATCH)
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductResponse> partialUpdateProduct(@PathVariable Long id, 
+                                                              @RequestBody ProductRequest request) {
+        try {
+            Optional<ProductResponse> updatedProduct = productService.updateProduct(id, request);
+            if (updatedProduct.isPresent()) {
+                return new ResponseEntity<>(updatedProduct.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    // Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        boolean deleted = productService.deleteProduct(id);
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
