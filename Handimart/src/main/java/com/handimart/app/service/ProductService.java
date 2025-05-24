@@ -146,6 +146,15 @@ public class ProductService {
         return Optional.of(convertToResponse(updatedProduct));
     }
     
+    // Delete
+    public boolean deleteProduct(Long id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    
     // Helper method to convert Product entity to ProductResponse DTO
     private ProductResponse convertToResponse(Product product) {
         ProductResponse response = new ProductResponse();
