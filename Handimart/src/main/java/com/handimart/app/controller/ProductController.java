@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.handimart.app.model.Product;
+import com.handimart.app.request.ProductRequest;
+import com.handimart.app.response.ProductResponse;
 import com.handimart.app.service.ProductService;
 
 @Controller
@@ -21,14 +23,14 @@ public class ProductController {
     
     // Read all
     @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
     
     // Read by id
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        Optional<ProductResponse> product = productService.getProductById(id);
         if (product.isPresent()) {
             return new ResponseEntity<>(product.get(), HttpStatus.OK);
         } else {
@@ -38,8 +40,12 @@ public class ProductController {
     
     // Create
     @PostMapping("/")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
+        try {
+            ProductResponse createdProduct = productService.createProduct(request);
+            return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
