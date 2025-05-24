@@ -19,7 +19,7 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long user_id;
+	private Long userId;
 	
 	@Column(nullable = false, unique = true)
 	private String username;
@@ -44,17 +44,20 @@ public class User {
 
 	@OneToOne(mappedBy = "user")
 	private SellerProfile sellerProfile;
+	
+	@OneToOne(mappedBy = "owner")
+	private WishList wishlist;
 
 	public User() {
 		super();
 	}
 
 	public Long getUser_id() {
-		return user_id;
+		return userId;
 	}
 
 	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
+		this.userId = user_id;
 	}
 
 	public String getUsername() {
