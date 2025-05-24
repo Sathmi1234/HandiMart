@@ -60,5 +60,74 @@ public class SellerProfile {
 	public enum SellerStatus{
         NEW, STANDARD, PREMIUM, ELITE
     }
+
+	public SellerProfile() {
+		super();
+	}
+
+	public Long getProfileID() {
+		return profileID;
+	}
+
+	public void setProfileID(Long profileID) {
+		this.profileID = profileID;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public boolean isFeaturedFlag() {
+		return featuredFlag;
+	}
+
+	public void setFeaturedFlag(boolean featuredFlag) {
+		this.featuredFlag = featuredFlag;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	public Integer getRatingCount() {
+		return ratingCount;
+	}
+
+	public void setRatingCount(Integer ratingCount) {
+		this.ratingCount = ratingCount;
+	}
+
+	public SellerStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SellerStatus status) {
+		this.status = status;
+	}
+
+	public Set<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<String> tags) {
+		this.tags = tags;
+	}
 		
+	
 }
