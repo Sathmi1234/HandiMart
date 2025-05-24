@@ -25,7 +25,7 @@ public class WishListSericeImp implements WishListService{
         User user  = userRepository.findById(request.getUser_id())
                 .orElseThrow(() -> new NoSuchElementException(("User not found")));
         WishList wishList = new WishList();
-        wishList.setUser(user);
+        wishList.setOwner(user);
         WishList saved = wishListRepository.save(wishList);
 
         return mapToResponse(saved);
@@ -33,7 +33,7 @@ public class WishListSericeImp implements WishListService{
 
     @Override
     public WishListResponse getWishListByUserId(Long userId) {
-        WishList wishList = wishListRepository.findByUser_id(userId)
+        WishList wishList = wishListRepository.findByOwner_UserId(userId)
                 .orElseThrow(() -> new NoSuchElementException("WIshlist not found"));
         return mapToResponse(wishList);
     }
@@ -41,7 +41,7 @@ public class WishListSericeImp implements WishListService{
     private WishListResponse mapToResponse(WishList wishList) {
         WishListResponse response = new WishListResponse();
         response.setWishListId(wishList.getWishListId());
-        response.setUserId(wishList.getUser().getId());
+        response.setUserId(wishList.getOwner().getUser_id());
         response.setCreatedAt(wishList.getCreatedAt());
         return response;
     }
