@@ -1,4 +1,11 @@
 package com.handimart.app.repository;
 
-public interface WishListRepository {
+import com.handimart.app.model.WishList;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+
+public interface WishListRepository extends JpaRepository<WishList, Long> {
+    Optional<WishList> findByUser_id(Long user_id);
 }
