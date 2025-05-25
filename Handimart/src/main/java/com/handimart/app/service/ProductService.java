@@ -75,6 +75,86 @@ public class ProductService {
         return convertToResponse(savedProduct);
     }
     
+    // Update
+    public Optional<ProductResponse> updateProduct(Long id, ProductRequest request) {
+        Optional<Product> existingProductOpt = productRepository.findById(id);
+        
+        if (existingProductOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        
+        Product existingProduct = existingProductOpt.get();
+        
+        // Update seller if provided and different
+        if (request.getSellerId() != null && 
+            !request.getSellerId().equals(existingProduct.getSeller().getUser_id())) {
+            User seller = userRepository.findById(request.getSellerId())
+                    .orElseThrow(() -> new RuntimeException("Seller not found with id: " + request.getSellerId()));
+            existingProduct.setSeller(seller);
+        }
+        
+        // Update category if provided and different
+        if (request.getCategoryId() != null && 
+            !request.getCategoryId().equals(existingProduct.getCategory().getCategoryId())) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
+            existingProduct.setCategory(category);
+        }
+        
+        // Update other fields
+        if (request.getTitle() != null) {
+            existingProduct.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            existingProduct.setDescription(request.getDescription());
+        }
+        if (request.getPrice() != null) {
+            existingProduct.setPrice(request.getPrice());
+        }
+        existingProduct.setBidEnabled(request.isBidEnabled());
+        if (request.getStartingBid() != null) {
+            existingProduct.setStartingBid(request.getStartingBid());
+        }
+        if (request.getBidEndTime() != null) {
+            existingProduct.setBidEndTime(request.getBidEndTime());
+        }
+        if (request.getRegion() != null) {
+            existingProduct.setRegion(request.getRegion());
+        }
+        if (request.getInventoryCount() != null) {
+            existingProduct.setInventoryCount(request.getInventoryCount());
+        }
+        if (request.getShippingDetails() != null) {
+            existingProduct.setShippingDetails(request.getShippingDetails());
+        }
+        existingProduct.setFeatured(request.isFeatured());
+        if (request.getTags() != null) {
+            existingProduct.setTags(request.getTags());
+        }
+        if (request.getImageUrls() != null) {
+            existingProduct.setImageUrls(request.getImageUrls());
+        }
+        if (request.getStatus() != null) {
+            existingProduct.setStatus(request.getStatus());
+        }
+        
+        // Update timestamp
+        existingProduct.setUpdatedAt(LocalDateTime.now());
+        
+        // Save and return response
+        Product updatedProduct = productRepository.save(existingProduct);
+        return Optional.of(convertToResponse(updatedProduct));
+    }
+    
+    // Delete
+    public boolean deleteProduct(Long id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    
     // Helper method to convert Product entity to ProductResponse DTO
     private ProductResponse convertToResponse(Product product) {
         ProductResponse response = new ProductResponse();

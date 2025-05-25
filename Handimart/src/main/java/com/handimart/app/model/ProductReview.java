@@ -43,4 +43,65 @@ public class ProductReview {
 	private LocalDateTime reviewDate = LocalDateTime.now();
 	
 	private Integer helpfulVotes;
+
+	public ProductReview() {
+		super();
+	}
+
+	public Long getReviewId() {
+		return reviewId;
+	}
+
+	public void setReviewId(Long reviewId) {
+		this.reviewId = reviewId;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public User getReviwer() {
+		return reviwer;
+	}
+
+	public void setReviwer(User reviwer) {
+		this.reviwer = reviwer;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public LocalDateTime getReviewDate() {
+		return reviewDate;
+	}
+
+	public void setReviewDate(LocalDateTime reviewDate) {
+		this.reviewDate = reviewDate;
+	}
+
+	public Integer getHelpfulVotes() {
+		return helpfulVotes;
+	}
+
+	public void setHelpfulVotes(Integer helpfulVotes) {
+		this.helpfulVotes = helpfulVotes;
+	}
+	
 }
