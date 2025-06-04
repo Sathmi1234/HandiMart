@@ -35,6 +35,43 @@ public class MessageController {
         }
     }
     
+    // Get messages between two users
+    @GetMapping("/conversation")
+    public ResponseEntity<List<MessageResponse>> getMessagesBetweenUsers(
+            @RequestParam Long senderId, 
+            @RequestParam Long recipientId) {
+        List<MessageResponse> messages = messageService.getMessagesBetweenUsers(senderId, recipientId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+    
+    // Get messages sent by a user
+    @GetMapping("/sent/{senderId}")
+    public ResponseEntity<List<MessageResponse>> getMessagesBySender(@PathVariable Long senderId) {
+        List<MessageResponse> messages = messageService.getMessagesBySender(senderId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+    
+    // Get messages received by a user
+    @GetMapping("/received/{recipientId}")
+    public ResponseEntity<List<MessageResponse>> getMessagesByRecipient(@PathVariable Long recipientId) {
+        List<MessageResponse> messages = messageService.getMessagesByRecipient(recipientId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+    
+    // Get unread messages for a user
+    @GetMapping("/unread/{recipientId}")
+    public ResponseEntity<List<MessageResponse>> getUnreadMessages(@PathVariable Long recipientId) {
+        List<MessageResponse> messages = messageService.getUnreadMessages(recipientId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
+    }
+    
+    // Count unread messages for a user
+    @GetMapping("/unread-count/{recipientId}")
+    public ResponseEntity<Long> countUnreadMessages(@PathVariable Long recipientId) {
+        Long count = messageService.countUnreadMessages(recipientId);
+        return new ResponseEntity<>(count, HttpStatus.OK);
+    }
+
     // Send message
     @PostMapping("/")
     public ResponseEntity<MessageResponse> sendMessage(@RequestBody MessageRequest request) {
@@ -44,6 +81,24 @@ public class MessageController {
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+    
+    // Mark message as read
+    @PutMapping("/{id}/mark-read")
+    public ResponseEntity<MessageResponse> markMessageAsRead(@PathVariable Long id) {
+        Optional<MessageResponse> updatedMessage = messageService.markMessageAsRead(id);
+        if (updatedMessage.isPresent()) {
+            return new ResponseEntity<>(updatedMessage.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+    // Mark all messages as read for a recipient
+    @PutMapping("/mark-all-read/{recipientId}")
+    public ResponseEntity<Void> markAllMessagesAsRead(@PathVariable Long recipientId) {
+        messageService.markAllMessagesAsRead(recipientId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     // Update message

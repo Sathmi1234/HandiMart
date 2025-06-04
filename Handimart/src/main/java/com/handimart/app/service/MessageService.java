@@ -35,7 +35,43 @@ public class MessageService {
         return messageRepository.findById(id)
                 .map(this::convertToResponse);
     }
-
+    
+    // Get messages between two users
+    public List<MessageResponse> getMessagesBetweenUsers(Long senderId, Long recipientId) {
+        return messageRepository.findMessagesBetweenUsers(senderId, recipientId)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    // Get messages sent by a user
+    public List<MessageResponse> getMessagesBySender(Long senderId) {
+        return messageRepository.findBySenderUserIdOrderBySentAtDesc(senderId)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    // Get messages received by a user
+    public List<MessageResponse> getMessagesByRecipient(Long recipientId) {
+        return messageRepository.findByRecipientUserIdOrderBySentAtDesc(recipientId)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    // Get unread messages for a user
+    public List<MessageResponse> getUnreadMessages(Long recipientId) {
+        return messageRepository.findUnreadMessagesByRecipient(recipientId)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+    
+    // Count unread messages for a user
+    public Long countUnreadMessages(Long recipientId) {
+        return messageRepository.countUnreadMessagesByRecipient(recipientId);
+    }
     
     // Create/Send message
     public MessageResponse sendMessage(MessageRequest request) {
@@ -68,6 +104,32 @@ public class MessageService {
         // Save and return response
         Message savedMessage = messageRepository.save(message);
         return convertToResponse(savedMessage);
+    }
+    
+    // Mark message as read
+    public Optional<MessageResponse> markMessageAsRead(Long messageId) {
+        Optional<Message> messageOpt = messageRepository.findById(messageId);
+        
+        if (messageOpt.isEmpty()) {
+            return Optional.empty();
+        }
+        
+        Message message = messageOpt.get();
+        message.setIsRead(true);
+        
+        Message updatedMessage = messageRepository.save(message);
+        return Optional.of(convertToResponse(updatedMessage));
+    }
+    
+    // Mark all messages as read for a recipient
+    public void markAllMessagesAsRead(Long recipientId) {
+        List<Message> unreadMessages = messageRepository.findUnreadMessagesByRecipient(recipientId);
+        
+        for (Message message : unreadMessages) {
+            message.setIsRead(true);
+        }
+        
+        messageRepository.saveAll(unreadMessages);
     }
     
     // Update message (limited fields)
