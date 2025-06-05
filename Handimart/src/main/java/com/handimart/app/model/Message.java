@@ -54,4 +54,76 @@ public class Message {
     
     @Column(name = "attachment_url", columnDefinition = "TEXT")
     private Set<String> attachmentUrls;
+
+	public Message() {
+		
+	}
+
+	public Long getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(Long messageId) {
+		this.messageId = messageId;
+	}
+
+	public User getSender() {
+		return sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public User getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(User recipient) {
+		this.recipient = recipient;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public LocalDateTime getSentAt() {
+		return sentAt;
+	}
+
+	public void setSentAt(LocalDateTime sentAt) {
+		this.sentAt = sentAt;
+	}
+
+	public Boolean getIsRead() {
+		return isRead;
+	}
+
+	public void setIsRead(Boolean isRead) {
+		this.isRead = isRead;
+	}
+
+	public Boolean getHasAttachment() {
+		return hasAttachment;
+	}
+
+	public void setHasAttachment(Boolean hasAttachment) {
+		this.hasAttachment = hasAttachment;
+	}
+
+	public Set<String> getAttachmentUrls() {
+		return attachmentUrls;
+	}
+
+	public void setAttachmentUrls(Set<String> attachmentUrls) {
+		this.attachmentUrls = attachmentUrls;
+	}
+	
+	
+    
+    
 }
