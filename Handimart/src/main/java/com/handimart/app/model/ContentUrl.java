@@ -29,4 +29,35 @@ public class ContentUrl {
     @ManyToOne
     @JoinColumn(name = "contentPostId")
     private ContentPost contentPost;
+
+	public ContentUrl() {
+		
+	}
+
+	public Long getContentUrlId() {
+		return contentUrlId;
+	}
+
+	public void setContentUrlId(Long contentUrlId) {
+		this.contentUrlId = contentUrlId;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public ContentPost getContentPost() {
+		return contentPost;
+	}
+
+	public void setContentPost(ContentPost contentPost) {
+		this.contentPost = contentPost;
+	}
+    
+	
+    
 }

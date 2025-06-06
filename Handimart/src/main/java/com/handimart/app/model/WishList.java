@@ -18,17 +18,45 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "whish_list")
+@Table(name = "wish_list")
 public class WishList {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long wishListId;
-	
+
 	@OneToOne
-	@JoinColumn(name = "userId", nullable = false, unique = true)
-	private User user;
-	
+	@JoinColumn(name = "owner_id", nullable = false, unique = true)
+	private User owner;
+
 	@Column(nullable = false)
 	private LocalDateTime createdAt = LocalDateTime.now();
+
+	public Long getWishListId() {
+		return wishListId;
+	}
+
+	public void setWishListId(Long wishListId) {
+		this.wishListId = wishListId;
+	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User user) {
+		this.owner = user;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+	
+	public WishList() {
+		
+	}
 }
