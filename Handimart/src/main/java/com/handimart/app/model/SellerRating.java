@@ -38,6 +38,48 @@ public class SellerRating {
 	
 	@Column(nullable = false)
 	private LocalDateTime ratedAt = LocalDateTime.now();
+
+	public Long getRatingID() {
+		return ratingID;
+	}
+
+	public void setRatingID(Long ratingID) {
+		this.ratingID = ratingID;
+	}
+
+	public User getSeller() {
+		return seller;
+	}
+
+	public void setSeller(User seller) {
+		this.seller = seller;
+	}
+
+	public User getRater() {
+		return rater;
+	}
+
+	public void setRater(User rater) {
+		this.rater = rater;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public LocalDateTime getRatedAt() {
+		return ratedAt;
+	}
+
+	public void setRatedAt(LocalDateTime ratedAt) {
+		this.ratedAt = ratedAt;
+	}
+
+
 	
 	
 }

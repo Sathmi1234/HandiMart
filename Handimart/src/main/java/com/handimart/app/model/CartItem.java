@@ -39,4 +39,50 @@ public class CartItem {
 	
 	@Column(nullable = false)
 	private LocalDateTime addedAt = LocalDateTime.now();
+	
+	public CartItem() {
+		
+	}
+
+	public Long getCartItemId() {
+		return cartItemId;
+	}
+
+	public void setCartItemId(Long cartItemId) {
+		this.cartItemId = cartItemId;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public LocalDateTime getAddedAt() {
+		return addedAt;
+	}
+
+	public void setAddedAt(LocalDateTime addedAt) {
+		this.addedAt = addedAt;
+	}
+	
+	
 }

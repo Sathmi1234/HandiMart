@@ -36,4 +36,40 @@ public class WishListItem {
 	
 	@Column(nullable = false)
 	private LocalDateTime addedAt = LocalDateTime.now();
+
+	public Long getWishListItemId() {
+		return wishListItemId;
+	}
+
+	public void setWishListItemId(Long wishListItemId) {
+		this.wishListItemId = wishListItemId;
+	}
+
+	public WishList getWishList() {
+		return wishList;
+	}
+
+	public void setWishList(WishList wishList) {
+		this.wishList = wishList;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public LocalDateTime getAddedAt() {
+		return addedAt;
+	}
+
+	public void setAddedAt(LocalDateTime addedAt) {
+		this.addedAt = addedAt;
+	}
+	
+	public WishListItem() {
+		
+	}
 }
