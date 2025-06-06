@@ -8,7 +8,8 @@ import com.handimart.app.response.CartItemResponse;
 
 public interface CartService {
 
-	void addCartItem(User user, AddCartItemRequest request);
-    List<CartItemResponse> getCartItems(User user);
-    void removeCartItem(Long cartItemId, User user);
+	List<CartItemResponse> getCartItems(User user);
+    CartItemResponse addToCart(User user, AddCartItemRequest request);
+    void removeFromCart(User user, Long cartItemId);
+    void clearCart(User user);
 }
