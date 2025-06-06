@@ -39,4 +39,49 @@ public class Bid {
 	
 	@Column(nullable = false)
 	private LocalDateTime bidTime = LocalDateTime.now();
+
+	public Long getBidId() {
+		return bidId;
+	}
+
+	public void setBidId(Long bidId) {
+		this.bidId = bidId;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public User getBidder() {
+		return bidder;
+	}
+
+	public void setBidder(User bidder) {
+		this.bidder = bidder;
+	}
+
+	public BigDecimal getBidAmount() {
+		return bidAmount;
+	}
+
+	public void setBidAmount(BigDecimal bidAmount) {
+		this.bidAmount = bidAmount;
+	}
+
+	public LocalDateTime getBidTime() {
+		return bidTime;
+	}
+
+	public void setBidTime(LocalDateTime bidTime) {
+		this.bidTime = bidTime;
+	}
+
+	public Bid() {
+	}
+	
+	
 }
