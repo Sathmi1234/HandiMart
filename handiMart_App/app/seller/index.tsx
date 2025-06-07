@@ -10,6 +10,105 @@ export default function SellerProfileScreen() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("Items");
 
+  // Dummy content posts data
+  const contentPosts = [
+    {
+      id: 1,
+      title: "How I make dreamcatchers",
+      image: require('../../assets/images/home/dreamcatcher.jpeg'),
+      description: "In this tutorial, I'll show you my process for creating handmade dreamcatchers using natural materials.",
+      likes: 124,
+      comments: 18,
+      date: new Date(2025, 4, 12)
+    },
+    {
+      id: 2,
+      title: "Spring collection inspiration",
+      image: require('../../assets/images/home/flowers.jpeg'),
+      description: "The flowers are blooming and spring is here! Check out what's inspiring my new seasonal collection.",
+      likes: 89,
+      comments: 7,
+      date: new Date(2025, 4, 5)
+    },
+    {
+      id: 3,
+      title: "Craft fair highlights",
+      image: require('../../assets/images/home/summer.jpeg'),
+      description: "Had an amazing weekend at the Downtown Summer Craft Fair. Thank you to everyone who stopped by!",
+      likes: 156,
+      comments: 22,
+      date: new Date(2025, 4, 1)
+    }
+  ];
+
+  const formatDate = (date) => {
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
+  const renderProductItem = (price, rating, reviews) => (
+    <View style={styles.productCard} key={`${price}-${reviews}-${Math.random()}`}>
+      <Image 
+        source={require('../../assets/images/home/dreamcatcher.jpeg')} 
+        style={styles.productImage}
+      />
+      <View style={styles.productActions}>
+        <View style={styles.actionIcons}>
+          <TouchableOpacity>
+            <Feather name="trash-2" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.editIcon}>
+            <Feather name="edit" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.priceText}>{price}$</Text>
+      </View>
+      <Text style={styles.productTitle}>Dreamcatcher</Text>
+      <View style={styles.ratingContainer}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Feather 
+            key={star} 
+            name="star" 
+            size={18} 
+            color={star <= rating ? "#FFD700" : "#e0e0e0"} 
+          />
+        ))}
+        <Text style={styles.reviewCount}>({reviews})</Text>
+      </View>
+    </View>
+  );
+
+  const renderContentPost = (post) => (
+    <View style={styles.contentCard} key={post.id}>
+      <View style={styles.contentHeader}>
+        <Image 
+          source={require('../../assets/images/icon.png')} 
+          style={styles.contentAuthorImage}
+        />
+        <View style={styles.contentHeaderText}>
+          <Text style={styles.contentAuthorName}>Alice</Text>
+          <Text style={styles.contentDate}>{formatDate(post.date)}</Text>
+        </View>
+      </View>
+      <Text style={styles.contentTitle}>{post.title}</Text>
+      <Image source={post.image} style={styles.contentImage} />
+      <Text style={styles.contentDescription}>{post.description}</Text>
+      <View style={styles.contentActions}>
+        <View style={styles.contentAction}>
+          <Feather name="heart" size={20} color="#555" />
+          <Text style={styles.contentActionText}>{post.likes}</Text>
+        </View>
+        <View style={styles.contentAction}>
+          <Feather name="message-circle" size={20} color="#555" />
+          <Text style={styles.contentActionText}>{post.comments}</Text>
+        </View>
+        <View style={styles.contentAction}>
+          <Feather name="share-2" size={20} color="#555" />
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -51,9 +150,26 @@ export default function SellerProfileScreen() {
 
         {activeTab === "Items" ? (
           <>
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Fixed Price Items</Text>
+              <View style={styles.productsGrid}>
+                {renderProductItem("14", 4, 3)}
+                {renderProductItem("14", 4, 9)}
+              </View>
+            </View>
+
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Bidding Items</Text>
+              <View style={styles.productsGrid}>
+                {renderProductItem("14", 4, 0)}
+                {renderProductItem("14", 4, 0)}
+              </View>
+            </View>
           </>
         ) : (
-        <></>
+          <View style={styles.contentContainer}>
+            {contentPosts.map(post => renderContentPost(post))}
+          </View>
         )}
       </ScrollView>
 
