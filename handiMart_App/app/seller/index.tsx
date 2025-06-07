@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from '@expo/vector-icons';
+import AddOptionsModal from './addOptionModal'; // Import the modal component
 
 const { width } = Dimensions.get("window");
 const itemWidth = width * 0.45;
@@ -9,6 +10,7 @@ const itemWidth = width * 0.45;
 export default function SellerProfileScreen() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("Items");
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Dummy content posts data
   const contentPosts = [
@@ -44,6 +46,14 @@ export default function SellerProfileScreen() {
   const formatDate = (date) => {
     const options = { month: 'short', day: 'numeric', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
+  };
+
+  const handleAddProduct = () => {
+    router.push('/seller/addProduct');
+  };
+
+  const handleAddPost = () => {
+    router.push('/seller/addPost');
   };
 
   const renderProductItem = (price, rating, reviews) => (
@@ -174,13 +184,33 @@ export default function SellerProfileScreen() {
       </ScrollView>
 
       <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fabAdd}>
+        <Pressable 
+          style={({ pressed }) => [
+            styles.fabAdd,
+            pressed && styles.fabPressed
+          ]}
+          onPress={() => setModalVisible(true)}
+        >
           <Feather name="plus" size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.fabChat}>
+        </Pressable>
+        
+        <Pressable 
+          style={({ pressed }) => [
+            styles.fabChat,
+            pressed && styles.fabPressed
+          ]}
+          onPress={() => router.push('/seller/inbox')}
+        >
           <Feather name="message-square" size={24} color="white" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
+
+      <AddOptionsModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onAddProduct={handleAddProduct}
+        onAddPost={handleAddPost}
+      />
     </View>
   );
 }
@@ -401,5 +431,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+  },
+    fabPressed: {
+    backgroundColor: "#B73E3E",
+    transform: [{ scale: 0.95 }],
+    elevation: 2,
   },
 });
