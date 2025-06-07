@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 
 export default function AccountScreen() {
   const router = useRouter();
+  
   // Mock user data - in a real app, this would come from a state or props
   const userData = {
     name: "Alice",
@@ -11,6 +12,18 @@ export default function AccountScreen() {
     phone: "+1 (555) 123-4567",
     address: "123 Main Street, Anytown, ST 12345",
     memberSince: "January 2023"
+  };
+
+  const handleEditProfile = () => {
+    router.push('/(tabs)/account/editProfile');
+  };
+
+  const handleOrderHistory = () => {
+    router.push('/(tabs)/account/orderHistory');
+  };
+
+  const handleSettings = () => {
+    router.push('/(tabs)/account/settings');
   };
 
   return (
@@ -53,13 +66,13 @@ export default function AccountScreen() {
 
           {/* Account Options */}
           <View style={styles.optionsSection}>
-            <TouchableOpacity style={styles.optionButton}>
+            <TouchableOpacity style={styles.optionButton} onPress={handleEditProfile}>
               <Text style={styles.optionText}>Edit Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton}>
+            <TouchableOpacity style={styles.optionButton} onPress={handleOrderHistory}>
               <Text style={styles.optionText}>Order History</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.optionButton}>
+            <TouchableOpacity style={styles.optionButton} onPress={handleSettings}>
               <Text style={styles.optionText}>Settings</Text>
             </TouchableOpacity>
           </View>
