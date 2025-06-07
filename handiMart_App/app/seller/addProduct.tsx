@@ -27,7 +27,7 @@ export default function AddProductScreen() {
   });
   const [images, setImages] = useState([]);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setProductData(prev => ({
       ...prev,
       [field]: value

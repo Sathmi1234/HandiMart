@@ -124,7 +124,7 @@ export default function OrderConfirmationScreen() {
           <Button
             mode="outlined"
             style={styles.button}
-            onPress={() => router.push('/')}
+            onPress={() => router.push('/(tabs)')}
           >
             Continue Shopping
           </Button>

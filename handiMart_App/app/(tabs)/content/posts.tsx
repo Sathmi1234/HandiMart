@@ -97,7 +97,8 @@ export default function ContentPostsScreen() {
               onPress={() => {
                 // Navigate to content post details when clicked
                 router.push({
-                  pathname: `/content/post/${item.id}`
+                  pathname: "/content/post/[id]",
+                  params: { id: String(item.id)},
                 });
               }}
             >

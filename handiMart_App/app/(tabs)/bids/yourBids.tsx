@@ -4,13 +4,25 @@ import { Text, Card, Avatar, Badge, Divider, IconButton } from "react-native-pap
 import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 
+type BidItem = {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  currentBid: number;
+  yourBid: number;
+  timeLeft: string;
+  status: 'winning' | 'outbid';
+  bidHistory: { amount: number; time: string; isYou: boolean }[];
+}
+
 export default function YourBids() {
   const router = useRouter();
   
   // Sample data for Your Bids section - expanded with more details
-  const [yourBids, setYourBids] = useState([
+  const [yourBids, setYourBids] = useState<BidItem[]>([
     {
-      id: '1',
+      id: 1,
       title: 'Vintage Camera',
       image: 'camera',
       description: 'Vintage film camera in excellent condition, includes original leather case',
@@ -26,7 +38,7 @@ export default function YourBids() {
       ]
     },
     {
-      id: '2',
+      id: 2,
       title: 'Gaming Console',
       image: 'gamepad',
       description: 'Latest gaming console with two controllers and three games included',
@@ -41,7 +53,7 @@ export default function YourBids() {
       ]
     },
     {
-      id: '3',
+      id: 3,
       title: 'Leather Jacket',
       image: 'hanger',
       description: 'Genuine leather jacket, size M, barely worn, excellent condition',
@@ -55,7 +67,7 @@ export default function YourBids() {
       ]
     },
     {
-      id: '4',
+      id: 4,
       title: 'Mechanical Keyboard',
       image: 'keyboard',
       description: 'Mechanical keyboard with Cherry MX switches, RGB lighting, like new',
@@ -70,7 +82,7 @@ export default function YourBids() {
       ]
     },
     {
-      id: '5',
+      id: 5,
       title: 'Wireless Earbuds',
       image: 'headphones',
       description: '24 hour battery life, noise cancelling, water resistant',
@@ -98,14 +110,15 @@ export default function YourBids() {
   };
 
   // Handler for navigating to individual bid details
-  const handleBidPress = (bidId) => {
+  const handleBidPress = (bidId: number) => {
     router.push({
-      pathname: `/(tabs)/bids/${bidId}`,
+      pathname: "/(tabs)/bids/[id]",
+      params: { id: String(bidId)},
     });
   };
 
   // Render a bid item
-  const renderBidItem = ({ item }) => (
+  const renderBidItem = ({ item }:{item:BidItem}) => (
     <Card 
       style={styles.bidCard}
       onPress={() => handleBidPress(item.id)}
@@ -191,7 +204,7 @@ export default function YourBids() {
       <FlatList
         data={filteredBids}
         renderItem={renderBidItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       />

@@ -3,13 +3,31 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Text, Card, Avatar, Chip, IconButton, Divider } from "react-native-paper";
 import { useState } from "react";
 
+type BidItem = {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  currentBid: number;
+  startingBid?: number;
+  bidCount: number;
+  timeLeft: string;
+  watchers: number;
+  seller: {
+    name: string;
+    rating: number;
+    verified: boolean;
+  };
+  categories: string[];
+}
+
 export default function TrendingBids() {
   const router = useRouter();
   
   // Sample data for Trending Bids section - expanded with more details
   const [trendingBids, setTrendingBids] = useState([
     {
-      id: '101',
+      id: 101,
       title: 'Limited Edition Sneakers',
       image: 'shoe-heel',
       description: 'Limited edition collectible sneakers, size 10, never worn, original box',
@@ -26,7 +44,7 @@ export default function TrendingBids() {
       categories: ['Fashion', 'Shoes', 'Limited Edition']
     },
     {
-      id: '102',
+      id: 102,
       title: 'Smartphone Latest Model',
       image: 'cellphone',
       description: 'Latest flagship smartphone, 256GB storage, factory sealed in box',
@@ -43,7 +61,7 @@ export default function TrendingBids() {
       categories: ['Electronics', 'Smartphones']
     },
     {
-      id: '103',
+      id: 103,
       title: 'Drone with Camera',
       image: 'drone',
       description: '4K camera drone with 30min flight time, obstacle avoidance and follow mode',
@@ -60,7 +78,7 @@ export default function TrendingBids() {
       categories: ['Electronics', 'Drones', 'Photography']
     },
     {
-      id: '104',
+      id: 104,
       title: 'Vintage Record Player',
       image: 'record-player',
       description: 'Classic turntable from the 70s, fully restored and in working condition',
@@ -77,7 +95,7 @@ export default function TrendingBids() {
       categories: ['Electronics', 'Vintage', 'Music']
     },
     {
-      id: '105',
+      id: 105,
       title: 'Designer Handbag',
       image: 'bag-personal',
       description: 'Authentic designer handbag, barely used, includes dust bag and authentication card',
@@ -94,7 +112,7 @@ export default function TrendingBids() {
       categories: ['Fashion', 'Accessories', 'Designer']
     },
     {
-      id: '106',
+      id: 106,
       title: 'Professional Camera Kit',
       image: 'camera',
       description: 'DSLR camera with multiple lenses, tripod, and carrying case',
@@ -140,14 +158,15 @@ export default function TrendingBids() {
   });
 
   // Handler for navigating to individual bid details
-  const handleBidPress = (bidId) => {
+  const handleBidPress = (bidId: number) => {
     router.push({
-      pathname: `/(tabs)/bids/${bidId}`,
+      pathname: "/(tabs)/bids/[id]",
+      params: { id: String(bidId)},
     });
   };
 
   // Render a bid item
-  const renderBidItem = ({ item }) => (
+  const renderBidItem = ({ item } : {item:BidItem}) => (
     <Card 
       style={styles.bidCard}
       onPress={() => handleBidPress(item.id)}
@@ -282,7 +301,7 @@ export default function TrendingBids() {
       <FlatList
         data={sortedBids}
         renderItem={renderBidItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       />

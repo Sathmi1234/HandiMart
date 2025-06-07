@@ -94,7 +94,7 @@ export default function BidItemDetail() {
     }, 500);
   }, [bidId, bidSection]);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status:string) => {
     return status === "winning" ? "#4CAF50" : "#F44336";
   };
 

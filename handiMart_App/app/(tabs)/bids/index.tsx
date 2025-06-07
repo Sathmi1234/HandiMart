@@ -88,10 +88,10 @@ export default function BidScreen() {
   ]);
 
   // Handler for navigating to individual bid details
-  const handleBidPress = (bidId: Number, section: String) => {
+  const handleBidPress = (bidId: number, section: string) => {
     router.push({
-      pathname: `/(tabs)/bids/${bidId}`,
-      params: { section },
+      pathname: "/(tabs)/bids/[id]",
+      params: { id: String(bidId), section },
     });
   };
 

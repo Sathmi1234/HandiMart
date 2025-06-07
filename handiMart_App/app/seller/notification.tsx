@@ -5,31 +5,39 @@ import Header from '../components/header';
 import { router } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 
+type NotificationItem = {
+    id: number,
+    title: string,
+    message: string,
+    time: string,
+    read: boolean,
+};
+
 // Sample notification data
 const notificationData = [
   {
-    id: '1',
+    id: 1,
     title: 'New Promotion',
     message: 'Check out our new discount on grocery items!',
     time: '2 hours ago',
     read: false,
   },
   {
-    id: '2',
+    id: 2,
     title: 'Order Status',
     message: 'Your order #12345 has been delivered successfully.',
     time: '1 day ago',
     read: true,
   },
   {
-    id: '3',
+    id: 3,
     title: 'Limited Time Offer',
     message: '25% off on all electronics this weekend!',
     time: '2 days ago',
     read: true,
   },
   {
-    id: '4',
+    id: 4,
     title: 'Payment Successful',
     message: 'Your payment of $45.99 was processed successfully.',
     time: '3 days ago',
@@ -38,7 +46,7 @@ const notificationData = [
 ];
 
 export default function NotificationScreen() {
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: NotificationItem }) => (
     <Card style={[styles.card, !item.read && styles.unreadCard]}>
       <Card.Content>
         <View style={styles.notificationHeader}>
@@ -71,7 +79,7 @@ export default function NotificationScreen() {
           <FlatList
             data={notificationData}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.listContainer}
           />
         ) : (

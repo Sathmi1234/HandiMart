@@ -9,6 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 // Mock data for creators
 const mockCreators = {
@@ -110,7 +111,14 @@ export default function CreatorDetails() {
         <Text style={styles.creatorName}>{creator.name}</Text>
         <Text style={styles.subscriberCount}>{creator.subscribers}</Text>
         <Text style={styles.bio}>{creator.bio}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => router.push({
+            pathname: '/seller/chat',
+            params: { 
+              senderName:creator.name,
+              senderId: creator.id
+            }
+          })}>
           <View style={styles.inboxIconContainer}>
             <Text style={styles.inboxIcon}>✉️</Text>
           </View>

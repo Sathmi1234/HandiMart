@@ -2,7 +2,14 @@ import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-const AddOptionsModal = ({ visible, onClose, onAddProduct, onAddPost }) => {
+type AddOptionsModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  onAddProduct: () => void;
+  onAddPost: () => void;
+};
+
+const AddOptionsModal: React.FC<AddOptionsModalProps> = ({ visible, onClose, onAddProduct, onAddPost }) => {
   return (
     <Modal
       visible={visible}

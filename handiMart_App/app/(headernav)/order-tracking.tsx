@@ -127,7 +127,7 @@ export default function OrderTrackingScreen() {
                     ]}
                   >
                     <MaterialIcons
-                      name={step.icon}
+                      name={step.icon as keyof typeof MaterialIcons.glyphMap}
                       size={24}
                       color={step.completed || step.active ? '#fff' : '#999'}
                     />

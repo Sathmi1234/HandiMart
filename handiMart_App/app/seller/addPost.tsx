@@ -21,7 +21,7 @@ export default function AddPostScreen() {
   });
   const [images, setImages] = useState([]);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setPostData(prev => ({
       ...prev,
       [field]: value

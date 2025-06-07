@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Pressable } from "react-native";
+import { ScrollView, View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Pressable, ImageSourcePropType } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from '@expo/vector-icons';
 import AddOptionsModal from './addOptionModal'; // Import the modal component
 
 const { width } = Dimensions.get("window");
 const itemWidth = width * 0.45;
+
+type PostItem = {
+  id: number;
+  title: string;
+  image: ImageSourcePropType;
+  description:string;
+  likes: number;
+  comments: number;
+  date: Date;
+};
 
 export default function SellerProfileScreen() {
   const router = useRouter();
@@ -43,7 +53,7 @@ export default function SellerProfileScreen() {
     }
   ];
 
-  const formatDate = (date) => {
+  const formatDate = (date: { toLocaleDateString: (arg0: string, arg1: { month: string; day: string; year: string; }) => any; }) => {
     const options = { month: 'short', day: 'numeric', year: 'numeric' };
     return date.toLocaleDateString('en-US', options);
   };
@@ -56,7 +66,7 @@ export default function SellerProfileScreen() {
     router.push('/seller/addPost');
   };
 
-  const renderProductItem = (price, rating, reviews) => (
+  const renderProductItem = (price:number, rating:number, reviews:number) => (
     <View style={styles.productCard} key={`${price}-${reviews}-${Math.random()}`}>
       <Image 
         source={require('../../assets/images/home/dreamcatcher.jpeg')} 
@@ -88,7 +98,7 @@ export default function SellerProfileScreen() {
     </View>
   );
 
-  const renderContentPost = (post) => (
+  const renderContentPost = (post:PostItem) => (
     <View style={styles.contentCard} key={post.id}>
       <View style={styles.contentHeader}>
         <Image 
@@ -169,16 +179,16 @@ export default function SellerProfileScreen() {
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Fixed Price Items</Text>
               <View style={styles.productsGrid}>
-                {renderProductItem("14", 4, 3)}
-                {renderProductItem("14", 4, 9)}
+                {renderProductItem(14, 4, 3)}
+                {renderProductItem(14, 4, 9)}
               </View>
             </View>
 
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Bidding Items</Text>
               <View style={styles.productsGrid}>
-                {renderProductItem("14", 4, 0)}
-                {renderProductItem("14", 4, 0)}
+                {renderProductItem(14, 4, 0)}
+                {renderProductItem(14, 4, 0)}
               </View>
             </View>
           </>

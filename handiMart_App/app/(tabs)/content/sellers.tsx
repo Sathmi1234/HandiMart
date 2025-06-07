@@ -53,7 +53,8 @@ export default function SellersScreen() {
                 // Navigate to creator profile when clicked
                 // Using the [sellerid].tsx file that exists in your project structure
                 router.push({
-                  pathname: `/content/seller/${item.id}`
+                  pathname: "/content/seller/[id]",
+                  params: { id: String(item.id)},
                 });
               }}
             >

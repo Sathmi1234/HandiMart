@@ -5,24 +5,32 @@ import { Card, Button, Divider, IconButton } from 'react-native-paper';
 import Header from '../components/header';
 import { Feather } from '@expo/vector-icons';
 
+type CartItem = {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+};
+
 // Mock data for cart items - in a real app, this would come from state management or local storage
 const initialCartItems = [
   {
-    id: '1',
+    id: 1,
     name: 'Dreamecatcher',
     price: 4.99,
     quantity: 2,
     image: 'icon.png',
   },
   {
-    id: '2',
+    id: 2,
     name: 'Painting',
     price: 3.49,
     quantity: 1,
     image: 'icon.png',
   },
   {
-    id: '3',
+    id: 3,
     name: 'Ornament',
     price: 3.99,
     quantity: 1,
@@ -47,7 +55,7 @@ export default function CartScreen() {
     setSubTotal(newSubTotal);
   }, [cartItems]);
 
-  const handleQuantityChange = (id, change) => {
+  const handleQuantityChange = (id: number, change: number) => {
     setCartItems((prevItems) =>
       prevItems.map((item) => {
         if (item.id === id) {
@@ -59,7 +67,7 @@ export default function CartScreen() {
     );
   };
 
-  const removeItem = (id) => {
+  const removeItem = (id: number) => {
     Alert.alert(
       "Remove Item",
       "Are you sure you want to remove this item from your cart?",
@@ -76,7 +84,7 @@ export default function CartScreen() {
     );
   };
 
-  const renderCartItem = ({ item }) => (
+  const renderCartItem = ({ item }: { item: CartItem }) => (
     <Card style={styles.cartItem}>
       <Card.Content style={styles.cartItemContent}>
         <View style={styles.itemInfo}>
@@ -128,7 +136,7 @@ export default function CartScreen() {
           <FlatList
             data={cartItems}
             renderItem={renderCartItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.cartList}
           />
           

@@ -188,7 +188,14 @@ export default function ContentPostDetails() {
               <Text style={styles.subscriberCount}>4.2M subscribers</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push({
+            pathname: '/seller/chat',
+            params: { 
+              senderName: contentPost.product?.seller?.name,
+              senderId: contentPost.product?.seller?.id
+            }
+          })}>
             <View style={styles.inboxIconContainer}>
               <Text style={styles.inboxIcon}>✉️</Text>
             </View>

@@ -90,7 +90,8 @@ export default function ContentScreen() {
               onPress={() => {
                 // Navigate to content post details when clicked
                 router.push({
-                  pathname: `/content/post/${item.id}`
+                  pathname: "/content/post/[id]",
+                  params: { id: String(item.id)},
                 });
               }}
             >
@@ -130,9 +131,10 @@ export default function ContentScreen() {
               style={styles.sellerItem}
               onPress={() => {
                 // Navigate to creator profile when clicked
-                router.push({
-                  pathname: `/content/seller/${item.id}`
-                });
+                    router.push({
+                      pathname: "/content/seller/[id]",
+                      params: { id: String(item.id)},
+                    });
               }}
             >
               <Image
