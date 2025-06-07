@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { Appbar, useTheme } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -11,15 +11,35 @@ type HeaderProps = {
 
 export default function Header({ showBackButton = false, title }: HeaderProps) {
   const router = useRouter();
+  const theme = useTheme();
+
+  const dynamicStyles = {
+    header: {
+      backgroundColor: theme.colors.elevation.level2,
+      borderBottomColor: theme.colors.outline,
+    },
+    title: {
+      color: theme.colors.onSurface,
+    },
+    icon: {
+      color: theme.colors.onSurface,
+    }
+  };
 
   return (
-    <Appbar.Header style={styles.header}>
+    <Appbar.Header style={[styles.header, dynamicStyles.header]}>
       {showBackButton && (
-        <Appbar.BackAction onPress={() => router.back()} />
+        <Appbar.BackAction 
+          onPress={() => router.back()} 
+          iconColor={theme.colors.onSurface}
+        />
       )}
       
       {title ? (
-        <Appbar.Content title={title} />
+        <Appbar.Content 
+          title={title} 
+          titleStyle={dynamicStyles.title}
+        />
       ) : (
         <Image 
           source={require('../../assets/images/HandiMartLogo.png')} 
@@ -31,14 +51,14 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
         <Feather
            name="shopping-cart"
            size={24}
-           color="black"
+           color={dynamicStyles.icon.color}
            style={styles.icon}
            onPress={() => router.push('/cart')}
         />
         <Feather
             name="bell"
             size={24}
-            color="black"
+            color={dynamicStyles.icon.color}
             style={styles.icon}
             onPress={() => router.push('/notification')}
          />
@@ -49,11 +69,9 @@ export default function Header({ showBackButton = false, title }: HeaderProps) {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#fff",
     justifyContent: "space-between",
     elevation: 0,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
   },
   logo: {
     width: 80,
