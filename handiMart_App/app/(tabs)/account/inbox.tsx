@@ -9,6 +9,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 interface MessageItem {
   id: string;
@@ -86,10 +87,9 @@ export default function InboxScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity 
-          style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Inbox</Text>
         <TouchableOpacity style={styles.searchButton}>
@@ -105,7 +105,14 @@ export default function InboxScreen() {
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.messageItem}>
+        <TouchableOpacity style={styles.messageItem} 
+            onPress={() => router.push({
+            pathname: '/seller/chat',
+            params: { 
+              senderName: item.sender,
+              senderId: item.id 
+            }
+        })}>
             <Image
               source={item.avatar}
               style={styles.avatar}
@@ -151,13 +158,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     elevation: 2,
     justifyContent: "space-between",
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonText: {
-    fontSize: 24,
-    color: '#000',
   },
   headerTitle: {
     fontSize: 22,
