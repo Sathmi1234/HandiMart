@@ -11,14 +11,14 @@ export default function SignIn() {
   const handleSignIn = () => {
     // Implement sign in logic here
     console.log("Sign in:", { email, password });
-    router.push("/(tabs)");
+    router.push("/seller");
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Sign Up" />
+        <Appbar.Content title="Sign In" />
       </Appbar.Header>
       <View style={styles.content}>
         <Title style={styles.title}>Welcome Back!</Title>
