@@ -127,7 +127,13 @@ export default function SellerProfileScreen() {
           style={styles.logo}
         />
         <TouchableOpacity>
-          <Feather name="bell" size={24} color="black" />
+          <Feather
+              name="bell"
+              size={24}
+              color="black"
+              style={styles.icon}
+              onPress={() => router.push('/seller/notification')}
+          />
         </TouchableOpacity>
       </View>
 
@@ -236,6 +242,9 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+  },
+  icon: {
+    marginLeft: 20,
   },
   profileSection: {
     alignItems: "center",
