@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
-import { Appbar, Card, TouchableRipple } from "react-native-paper";
+import { Appbar, Card, TouchableRipple, useTheme } from "react-native-paper";
 import { Feather } from '@expo/vector-icons';
 
 const { width } = Dimensions.get("window");
@@ -9,9 +9,32 @@ const cardWidth = width * 0.45;
 
 export default function HomeScreen() {
   const router = useRouter();
+  const theme = useTheme();
+
+  const dynamicStyles = {
+    container: {
+      backgroundColor: theme.colors.background,
+    },
+    newArrivalsText: {
+      color: theme.colors.onSurface,
+      backgroundColor: theme.colors.surfaceVariant + '80', 
+      padding: 8,
+      borderRadius: 4,
+    },
+    categoryTitle: {
+      color: theme.colors.onSurface,
+      backgroundColor: theme.colors.surfaceVariant + '80',
+      padding: 8,
+      borderRadius: 4,
+    },
+    categoryCard: {
+      backgroundColor: theme.colors.surface,
+      elevation: 2,
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dynamicStyles.container]}>
       {/* Main Content */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.bannerContainer}>
@@ -19,12 +42,14 @@ export default function HomeScreen() {
             source={require('../../assets/images/home/bird.jpg')} 
             style={styles.birdImage}
           />
-          <Text style={styles.newArrivalsText}>New Arrivals</Text>
+          <Text style={[styles.newArrivalsText, dynamicStyles.newArrivalsText]}>
+            New Arrivals
+          </Text>
         </View>
 
         <View style={styles.categoriesGrid}>
           <TouchableRipple 
-            style={[styles.categoryCard, styles.summerCard]} 
+            style={[styles.categoryCard, styles.summerCard, dynamicStyles.categoryCard]} 
             onPress={() => console.log("Summer sale pressed")}
           >
             <View>
@@ -32,12 +57,14 @@ export default function HomeScreen() {
                 source={require('../../assets/images/home/summer.jpeg')} 
                 style={styles.categoryImage}
               />
-              <Text style={styles.categoryTitle}>Summer sale</Text>
+              <Text style={[styles.categoryTitle, dynamicStyles.categoryTitle]}>
+                Summer sale
+              </Text>
             </View>
           </TouchableRipple>
           <View style={styles.categoryRow}>
             <TouchableRipple 
-              style={[styles.categoryCard, styles.smallCard]} 
+              style={[styles.categoryCard, styles.smallCard, dynamicStyles.categoryCard]} 
               onPress={() => console.log("Flowers pressed")}
             >
               <View>
@@ -45,11 +72,13 @@ export default function HomeScreen() {
                   source={require('../../assets/images/home/flowers.jpeg')} 
                   style={styles.categoryImage}
                 />
-                <Text style={styles.categoryTitle}>Flowers</Text>
+                <Text style={[styles.categoryTitle, dynamicStyles.categoryTitle]}>
+                  Flowers
+                </Text>
               </View>
             </TouchableRipple>
             <TouchableRipple 
-              style={[styles.categoryCard, styles.smallCard]} 
+              style={[styles.categoryCard, styles.smallCard, dynamicStyles.categoryCard]} 
               onPress={() => console.log("Dreamcatchers pressed")}
             >
               <View>
@@ -57,7 +86,9 @@ export default function HomeScreen() {
                   source={require('../../assets/images/home/dreamcatcher.jpeg')} 
                   style={styles.categoryImage}
                 />
-                <Text style={styles.categoryTitle}>Dreamcatchers</Text>
+                <Text style={[styles.categoryTitle, dynamicStyles.categoryTitle]}>
+                  Dreamcatchers
+                </Text>
               </View>
             </TouchableRipple>
           </View>
@@ -70,14 +101,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   header: {
-    backgroundColor: "#fff",
     justifyContent: "space-between",
     elevation: 0,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
   },
   logo: {
     width: 80,
@@ -116,7 +144,6 @@ const styles = StyleSheet.create({
     left: 20,
     fontSize: 24,
     fontWeight: "bold",
-    color: "#000",
   },
   categoriesGrid: {
     padding: 10,
@@ -150,9 +177,5 @@ const styles = StyleSheet.create({
     left: 10,
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: {width: -1, height: 1},
-    textShadowRadius: 10
   },
 });

@@ -1,21 +1,37 @@
 import { Tabs } from "expo-router";
 import { MaterialCommunityIcons, Feather, Ionicons } from '@expo/vector-icons';
 import { View, StyleSheet } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import Header from '../components/header';
 
 export default function TabsLayout() {
+  const theme = useTheme();
+
+  const dynamicStyles = {
+    container: {
+      backgroundColor: theme.colors.background,
+    },
+    tabBar: {
+      backgroundColor: theme.colors.elevation.level2,
+      borderTopColor: theme.colors.outline,
+      borderTopWidth: 1,
+      height: 60,
+      paddingBottom: 5,
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dynamicStyles.container]}>
       <Header />
       <Tabs 
         screenOptions={{ 
-          headerShown: false, // Hide the default header since we're using our custom one
-          tabBarActiveTintColor: '#000',
-          tabBarInactiveTintColor: '#888',
-          tabBarStyle: {
-            height: 60,
-            paddingBottom: 5,
-          }
+          headerShown: false,
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
+          tabBarStyle: dynamicStyles.tabBar,
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       >
         <Tabs.Screen 
