@@ -102,9 +102,16 @@ export default function ItemsScreen() {
   ]);
 
   // Handler for navigating to individual item details
-  const handleItemPress = (itemId, type) => {
+  const handleItemPressBid = (itemId, type) => {
     router.push({
-      pathname: `/(tabs)/marketplace/${itemId}`,
+      pathname: `/(tabs)/bids/${itemId}`,
+      params: { type },
+    });
+  };
+
+    const handleItemPressFix = (itemId, type) => {
+    router.push({
+      pathname: `/(tabs)/items/${itemId}`,
       params: { type },
     });
   };
@@ -162,7 +169,7 @@ export default function ItemsScreen() {
               <Card
                 key={item.id}
                 style={styles.bidItemCard}
-                onPress={() => handleItemPress(item.id, "auction")}
+                onPress={() => handleItemPressBid(item.id, "auction")}
               >
                 <Card.Content style={styles.cardContentVertical}>
                   <Avatar.Icon
@@ -202,7 +209,7 @@ export default function ItemsScreen() {
               <Card
                 key={item.id}
                 style={styles.fixedItemCard}
-                onPress={() => handleItemPress(item.id, "fixed")}
+                onPress={() => handleItemPressFix(item.id, "fixed")}
               >
                 <Card.Content style={styles.cardContentVertical}>
                   <Avatar.Icon

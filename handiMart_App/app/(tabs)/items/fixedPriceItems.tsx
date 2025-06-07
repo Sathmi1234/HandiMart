@@ -274,7 +274,7 @@ export default function FixedPriceItemsScreen() {
 
   const handleItemPress = (itemId) => {
     router.push({
-      pathname: `/(tabs)/marketplace/${itemId}`,
+      pathname: `/(tabs)/items/${itemId}`,
       params: { type: "fixed" },
     });
   };

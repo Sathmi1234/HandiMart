@@ -216,7 +216,7 @@ export default function AuctionItemsScreen() {
   
   const handleItemPress = (itemId) => {
     router.push({
-      pathname: `/(tabs)/marketplace/${itemId}`,
+      pathname: `/(tabs)/bids/${itemId}`,
       params: { type: "auction" },
     });
   };
