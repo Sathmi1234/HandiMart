@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react
 import { useRouter } from 'expo-router';
 import { Card, Button, Divider, IconButton } from 'react-native-paper';
 import Header from '../components/header';
+import { Feather } from '@expo/vector-icons';
 
 // Mock data for cart items - in a real app, this would come from state management or local storage
 const initialCartItems = [
@@ -111,10 +112,9 @@ export default function CartScreen() {
         <Header/>
         <View style={styles.header}>
             <TouchableOpacity
-                style={styles.backButton}
                 onPress={() => router.back()}
             >
-                <Text style={styles.backButtonText}>←</Text>
+              <Feather name="arrow-left" size={24} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>My Cart</Text>
             <IconButton
@@ -180,16 +180,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   header: {
     flexDirection: "row",

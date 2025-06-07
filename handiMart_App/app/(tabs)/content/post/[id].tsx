@@ -9,6 +9,7 @@ import {
   FlatList
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 // Mock data structure matching the Java backend model
 const mockContentPosts = {
@@ -131,10 +132,9 @@ export default function ContentPostDetails() {
     <ScrollView style={styles.container}>
       {/* Back button */}
       <TouchableOpacity 
-        style={styles.backButton}
         onPress={() => router.back()}
       >
-        <Text style={styles.backButtonText}>← Back</Text>
+        <Feather name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
       
       {/* Content Header - Main Image/Video */}
@@ -269,18 +269,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backButton: {
-    margin: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   mediaContainer: {
     position: 'relative',

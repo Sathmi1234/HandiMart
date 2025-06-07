@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, Button, ActivityIndicator, ProgressBar, IconButton } from 'react-native-paper';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Header from '../components/header';
 
@@ -79,10 +79,9 @@ export default function OrderTrackingScreen() {
               <Header/>
         <View style={styles.header}>
             <TouchableOpacity
-                style={styles.backButton}
                 onPress={() => router.back()}
             >
-                <Text style={styles.backButtonText}>←</Text>
+                <Feather name="arrow-left" size={24} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Order Tracking</Text>
             <IconButton
@@ -195,16 +194,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingBottom: 32,
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   header: {
     flexDirection: "row",

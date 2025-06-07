@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, Text, TouchableOpacity } from 'react-native
 import { Card, Title, Paragraph, Divider, IconButton } from 'react-native-paper';
 import Header from '../components/header';
 import { router } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 // Sample notification data
 const notificationData = [
@@ -55,10 +56,9 @@ export default function NotificationScreen() {
       <Header/>
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>← Back</Text>
+          <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Notifications</Text>
         <IconButton
@@ -93,16 +93,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: 16,
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   header: {
     flexDirection: "row",

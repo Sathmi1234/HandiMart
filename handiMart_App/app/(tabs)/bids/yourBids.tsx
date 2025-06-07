@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Text, Card, Avatar, Badge, Divider, IconButton } from "react-native-paper";
 import { useState } from "react";
+import { Feather } from "@expo/vector-icons";
 
 export default function YourBids() {
   const router = useRouter();
@@ -152,10 +153,9 @@ export default function YourBids() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity 
-          style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Your Bids</Text>
         <IconButton 
@@ -212,13 +212,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     justifyContent: 'space-between',
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonText: {
-    fontSize: 24,
-    color: '#000',
   },
   headerTitle: {
     fontSize: 22,

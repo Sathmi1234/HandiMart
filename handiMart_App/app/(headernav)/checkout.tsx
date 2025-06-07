@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-nati
 import { TextInput, Button, RadioButton, Card, Divider, IconButton } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import Header from '../components/header';
+import { Feather } from '@expo/vector-icons';
 
 export default function CheckoutScreen() {
   const router = useRouter();
@@ -23,10 +24,9 @@ export default function CheckoutScreen() {
               <Header/>
         <View style={styles.header}>
             <TouchableOpacity
-                style={styles.backButton}
                 onPress={() => router.back()}
             >
-                <Text style={styles.backButtonText}>←</Text>
+                <Feather name="arrow-left" size={24} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Checkout</Text>
             <IconButton
@@ -158,16 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   header: {
     flexDirection: "row",

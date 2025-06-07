@@ -8,6 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 
 interface ContentItem {
   id: string;
@@ -75,11 +76,10 @@ export default function ContentPostsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
+        <TouchableOpacity
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>← Back</Text>
+          <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>All Content Posts</Text>
       </View>
@@ -136,16 +136,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
     backgroundColor: '#fff',
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   headerTitle: {
     fontSize: 18,

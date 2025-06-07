@@ -100,8 +100,8 @@ export default function CreatorDetails() {
   return (
     <ScrollView style={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>← Back</Text>
+      <TouchableOpacity  onPress={() => router.back()}>
+        <Feather name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
 
       {/* Creator Profile */}
@@ -156,14 +156,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backButton: {
-    margin: 16,
-    padding: 8,
-    backgroundColor: '#E6F0FF',
-    borderRadius: 4,
-    alignSelf: 'flex-start',
-  },  
+  }, 
   inboxIconContainer: {
     position: 'relative',
     justifyContent: 'center',
@@ -171,10 +164,6 @@ const styles = StyleSheet.create({
   },
   inboxIcon: {
     fontSize: 24,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   profileContainer: {
     alignItems: 'center',

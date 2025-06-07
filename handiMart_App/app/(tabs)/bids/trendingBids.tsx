@@ -215,11 +215,10 @@ export default function TrendingBids() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
+        <TouchableOpacity
           onPress={() => router.back()}
         >
-          <Text style={styles.backButtonText}>←</Text>
+          <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Trending Bids</Text>
         <IconButton 
@@ -304,13 +303,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     justifyContent: 'space-between',
-  },
-  backButton: {
-    padding: 8,
-  },
-  backButtonText: {
-    fontSize: 24,
-    color: '#000',
   },
   headerTitle: {
     fontSize: 22,
@@ -486,3 +478,4 @@ const styles = StyleSheet.create({
 
 // Don't forget to import ScrollView at the top
 import { ScrollView } from 'react-native';
+import { Feather } from "@expo/vector-icons";

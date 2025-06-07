@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { Button, Card, Divider, IconButton } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Header from '../components/header';
 import { TouchableOpacity } from 'react-native';
 
@@ -29,10 +29,9 @@ export default function OrderConfirmationScreen() {
       <Header/>
       <View style={styles.header}>
         <TouchableOpacity
-          style={styles.backButton}
           onPress={() => router.back()}
         >
-        <Text style={styles.backButtonText}>←</Text>
+        <Feather name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
           <Text style={styles.headerTitle}>Order Confirmation</Text>
           <IconButton
@@ -142,16 +141,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-  },
-  backButton: {
-    marginRight: 16,
-    backgroundColor: '#E6F0FF',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: '#065FD4',
   },
   header: {
     flexDirection: "row",
