@@ -27,6 +27,18 @@ export default function AccountScreen() {
     router.push('/(auth)/sign_in');
   };
 
+    const handleEditProfile = () => {
+    router.push('/(tabs)/account/editProfile');
+  };
+
+  const handleOrderHistory = () => {
+    router.push('/(tabs)/account/orderHistory');
+  };
+
+  const handleSettings = () => {
+    router.push('/(tabs)/account/settings');
+  };
+
   const dynamicStyles = {
     mainContainer: {
       backgroundColor: theme.colors.background,
@@ -173,13 +185,13 @@ export default function AccountScreen() {
 
           {/* Account Options */}
           <View style={styles.optionsSection}>
-            <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]}>
+            <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]} onPress={handleEditProfile}>
               <Text style={[styles.optionText, dynamicStyles.optionText]}>
                 Edit Profile
               </Text>
             </TouchableOpacity>
             {user?.role === 'ROLE_CUSTOMER' && (
-              <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]}>
+              <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]} onPress={handleOrderHistory}>
                 <Text style={[styles.optionText, dynamicStyles.optionText]}>
                   Order History
                 </Text>
@@ -192,7 +204,7 @@ export default function AccountScreen() {
                 </Text>
               </TouchableOpacity>
             )}
-            <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]}>
+            <TouchableOpacity style={[styles.optionButton, dynamicStyles.optionButton]} onPress={handleSettings}>
               <Text style={[styles.optionText, dynamicStyles.optionText]}>
                 Settings
               </Text>
