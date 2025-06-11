@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.handimart.app.request.ProductRequest;
@@ -37,6 +38,7 @@ public class ProductController {
     
     // Create
     @PostMapping("/")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request) {
         try {
             ProductResponse createdProduct = productService.createProduct(request);
@@ -48,6 +50,7 @@ public class ProductController {
     
     // Update
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, 
                                                        @RequestBody ProductRequest request) {
         try {
@@ -64,6 +67,7 @@ public class ProductController {
     
     // Partial Update (PATCH)
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<ProductResponse> partialUpdateProduct(@PathVariable Long id, 
                                                               @RequestBody ProductRequest request) {
         try {
@@ -80,6 +84,7 @@ public class ProductController {
     
     // Delete
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_SELLER')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         boolean deleted = productService.deleteProduct(id);
         if (deleted) {
