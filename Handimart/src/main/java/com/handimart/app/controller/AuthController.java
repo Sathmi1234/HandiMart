@@ -6,6 +6,7 @@ import com.handimart.app.model.USER_ROLE;
 import com.handimart.app.model.User;
 import com.handimart.app.repository.CartRepository;
 import com.handimart.app.repository.UserRepository;
+import com.handimart.app.request.ChangePasswordRequest;
 import com.handimart.app.request.LoginRequest;
 import com.handimart.app.request.UserSignupRequest;
 import com.handimart.app.response.AuthResponse;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
 
@@ -117,4 +119,38 @@ public class AuthController {
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
+    
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(ChangePasswordRequest request) {
+    	 String oldPassword = request.getOldPassword();
+    	 String newPassword = request.getNewPassword();
+
+    	 System.out.println("Old: " + oldPassword + ", New: " + newPassword);
+    	 
+    	 if (oldPassword == null || newPassword == null) {
+    	    throw new IllegalArgumentException("Old password and new password must not be null");
+    	 }
+    	 
+    	 
+
+    	    
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getPrincipal().toString();
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadCredentialsException("Incorrect old password");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+//        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Password changed successfully");
+    }
+
 }
