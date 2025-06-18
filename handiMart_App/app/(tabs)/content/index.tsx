@@ -1,22 +1,35 @@
-import React from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native'; 
 import { useRouter } from 'expo-router';
 import { IconButton } from 'react-native-paper';
+import { Feather } from '@expo/vector-icons';
 
-interface ContentItem {
-  id: string;
+// Define interfaces based on your backend response
+interface ContentPostResponse {
+  contentPostId: number;
   title: string;
-  author: string;
-  thumbnail: any;
-  type: string;
-  postedTime: string;
+  description: string;
+  productId: number;
+  createdAt: string;
+}
+
+interface ContentUrlResponse {
+  contentUrlId: number;
+  url: string;
+  contentPostId: number;
+}
+
+interface ContentItemWithUrls extends ContentPostResponse {
+  urls: ContentUrlResponse[];
+  thumbnailUrl?: string;
 }
 
 interface SellerItem {
@@ -28,34 +41,109 @@ interface SellerItem {
 
 export default function ContentScreen() {
   const router = useRouter();
+  const [contentPosts, setContentPosts] = useState<ContentItemWithUrls[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Replace with your actual backend URL
+  const BASE_URL = 'http://192.168.7.149:5454/'; // Update this with your actual backend URL
   
-  const contentItems: ContentItem[] = [
-    {
-      id: '1',
-      title: 'Concept Art Process',
-      author: 'Alice',
-      thumbnail: require('../../../assets/images/icon.png'),
-      type: 'tutorial',
-      postedTime: '2 days ago'
-    },
-    {
-      id: '2',
-      title: 'Advanced Composition',
-      author: 'Alice',
-      thumbnail: require('../../../assets/images/icon.png'),
-      type: 'tutorial',
-      postedTime: '1 week ago'
-    },
-    {
-      id: '3',
-      title: 'Lighting Techniques',
-      author: 'Alice',
-      thumbnail: require('../../../assets/images/icon.png'),
-      type: 'tutorial',
-      postedTime: '3 weeks ago'
+  // Fetch content posts from backend (limited to first 3 for homepage)
+  const fetchContentPosts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log('Attempting to fetch from:', `${BASE_URL}content-posts/`);
+
+      const postsResponse = await fetch(`${BASE_URL}content-posts/`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!postsResponse.ok) {
+        const errorText = await postsResponse.text();
+        console.error('Server error response:', errorText);
+        throw new Error(`Server returned ${postsResponse.status}: ${errorText}`);
+      }
+
+      const posts: ContentPostResponse[] = await postsResponse.json();
+      
+      if (!Array.isArray(posts)) {
+        throw new Error('Invalid response format: expected an array of posts');
+      }
+
+      // Limit to first 3 posts for homepage display
+      const limitedPosts = posts.slice(0, 3);
+
+      const postsWithUrls: ContentItemWithUrls[] = await Promise.all(
+        limitedPosts.map(async (post) => {
+          try {
+            const urlsResponse = await fetch(`${BASE_URL}content-urls/content-post/${post.contentPostId}`, {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!urlsResponse.ok) {
+              throw new Error(`Failed to fetch URLs: ${urlsResponse.status}`);
+            }
+
+            const urls: ContentUrlResponse[] = await urlsResponse.json();
+            
+            // Find the first image URL as thumbnail
+            const thumbnailUrl = urls.find(url => 
+              url.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+            )?.url;
+
+            return {
+              ...post,
+              urls,
+              thumbnailUrl
+            };
+          } catch (urlError) {
+            console.warn(`Failed to fetch URLs for post ${post.contentPostId}:`, urlError);
+            return {
+              ...post,
+              urls: [],
+              thumbnailUrl: undefined
+            };
+          }
+        })
+      );
+
+      setContentPosts(postsWithUrls);
+    } catch (err) {
+      console.error('Error fetching content posts:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load content');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchContentPosts();
+  }, []);
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
+    return `${Math.ceil(diffDays / 365)} years ago`;
+  };
   
+  // Keep the mock seller data for now
   const sellerItems: SellerItem[] = [
     { id: 'bio1', name: 'Alice', image: require('../../../assets/images/icon.png'), subscribers: '120K subscribers' },
     { id: 'bio2', name: 'Bob', image: require('../../../assets/images/icon.png'), subscribers: '45K subscribers' },
@@ -72,47 +160,84 @@ export default function ContentScreen() {
           onPress={() => console.log("Search pressed")}
         />
       </View>
+      
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Content Posts</Text>
         <TouchableOpacity onPress={() => router.push('/content/posts')}>
           <Text style={styles.moreButton}>MORE</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={contentItems}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => {
-          if (!item || !item.thumbnail) return null;
-          
-          return (
+
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#007AFF" />
+          <Text style={styles.loadingText}>Loading content...</Text>
+        </View>
+      ) : error ? (
+        <View style={styles.errorContainer}>
+          <Feather name="alert-circle" size={24} color="#FF3B30" />
+          <Text style={styles.errorText}>Failed to load content</Text>
+          <TouchableOpacity onPress={fetchContentPosts} style={styles.retryButton}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      ) : contentPosts.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Feather name="file-text" size={24} color="#8E8E93" />
+          <Text style={styles.emptyText}>No content posts available</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={contentPosts}
+          keyExtractor={(item) => item.contentPostId.toString()}
+          renderItem={({ item }) => (
             <TouchableOpacity 
               style={styles.contentItem}
               onPress={() => {
-                // Navigate to content post details when clicked
                 router.push({
                   pathname: "/content/post/[id]",
-                  params: { id: String(item.id)},
+                  params: { 
+                    id: item.contentPostId.toString(),
+                    title: item.title,
+                    description: item.description || '',
+                    productId: item.productId.toString()
+                  },
                 });
               }}
             >
               <View style={styles.contentLayout}>
-                <Image
-                  source={item.thumbnail}
-                  style={styles.videoThumbnail}
-                  resizeMode="cover"
-                />
+                {item.thumbnailUrl ? (
+                  <Image
+                    source={{ uri: item.thumbnailUrl }}
+                    style={styles.videoThumbnail}
+                    resizeMode="cover"
+                    onError={() => {
+                      console.warn(`Failed to load thumbnail: ${item.thumbnailUrl}`);
+                    }}
+                  />
+                ) : (
+                  <View style={styles.placeholderThumbnail}>
+                    <Feather name="image" size={32} color="#8E8E93" />
+                  </View>
+                )}
                 <View style={styles.videoInfoContainer}>
                   <Text style={styles.videoTitle} numberOfLines={2}>
                     {item.title}
                   </Text>
-                  <Text style={styles.videoMeta}>{item.author} • {item.postedTime}</Text>
-                  <Text style={styles.videoSubtitle}>Part 1: Sketching</Text>
+                  <Text style={styles.videoMeta}>
+                    Product ID: {item.productId} • {formatDate(item.createdAt)}
+                  </Text>
+                  {item.description && (
+                    <Text style={styles.videoSubtitle} numberOfLines={2}>
+                      {item.description}
+                    </Text>
+                  )}
                 </View>
               </View>
             </TouchableOpacity>
-          );
-        }}
-      />
+          )}
+        />
+      )}
       
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Popular Creators</Text>
@@ -130,11 +255,10 @@ export default function ContentScreen() {
             <TouchableOpacity 
               style={styles.sellerItem}
               onPress={() => {
-                // Navigate to creator profile when clicked
-                    router.push({
-                      pathname: "/content/seller/[id]",
-                      params: { id: String(item.id)},
-                    });
+                router.push({
+                  pathname: "/content/seller/[id]",
+                  params: { id: String(item.id)},
+                });
               }}
             >
               <Image
@@ -207,6 +331,14 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 8,
   },
+  placeholderThumbnail: {
+    width: 160,
+    height: 90,
+    borderRadius: 8,
+    backgroundColor: '#F2F2F7',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   videoInfoContainer: {
     flex: 1,
     marginLeft: 12,
@@ -249,5 +381,48 @@ const styles = StyleSheet.create({
   subscriberCount: {
     fontSize: 12,
     color: '#606060',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  loadingText: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#8E8E93',
+  },
+  errorContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  errorText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#FF3B30',
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#007AFF',
+    borderRadius: 6,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  emptyText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#8E8E93',
+    textAlign: 'center',
   },
 });
