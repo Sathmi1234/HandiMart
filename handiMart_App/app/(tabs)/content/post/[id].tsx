@@ -6,151 +6,301 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 
-// Mock data structure matching the Java backend model
-const mockContentPosts = {
-  '1': {
-    contentPostId: 1,
-    urls: [
-      { id: 1, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 2, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 3, url: 'https://example.com/video.mp4', type: 'VIDEO' }
-    ],
-    product: {
-      productId: 101,
-      name: 'Digital Art Brushes Package',
-      price: 24.99,
-      seller: {
-        id: 'bio1',
-        name: 'Alice',
-        profileImage: require('../../../../assets/images/icon.png')
-      }
-    },
-    title: 'Complete Guide to Digital Art Brushes',
-    description: 'Learn how to use the included brushes to create stunning digital artwork. This comprehensive guide covers techniques for beginners to advanced artists.',
-    createdAt: '2025-04-29T10:15:30'
-  },
-  '2': {
-    contentPostId: 2,
-    urls: [
-      { id: 4, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 5, url: '../../../../assets/images/icon.png', type: 'IMAGE' }
-    ],
-    product: {
-      productId: 102,
-      name: 'Composition Framework Templates',
-      price: 19.99,
-      seller: {
-        id: 'bio1',
-        name: 'Alice',
-        profileImage: require('../../../../assets/images/icon.png')
-      }
-    },
-    title: 'Advanced Composition',
-    description: 'Master the art of composition with these professional templates and techniques. Learn how to create balanced and visually appealing artwork.',
-    createdAt: '2025-04-22T14:30:00'
-  },
-  '3': {
-    contentPostId: 3,
-    urls: [
-      { id: 6, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 7, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 8, url: 'https://example.com/lighting_tutorial.mp4', type: 'VIDEO' }
-    ],
-    product: {
-      productId: 103,
-      name: 'Lighting Effects Pack',
-      price: 29.99,
-      seller: {
-        id: 'bio1',
-        name: 'Alice',
-        profileImage: require('../../../../assets/images/icon.png')
-      }
-    },
-    title: 'Lighting Techniques',
-    description: 'Transform your artwork with professional lighting techniques. This guide provides step-by-step instructions for creating realistic lighting effects.',
-    createdAt: '2025-04-15T09:45:00'
-  },
-  '4': {
-    contentPostId: 4,
-    urls: [
-      { id: 9, url: '../../../../assets/images/icon.png', type: 'IMAGE' },
-      { id: 10, url: '../../../../assets/images/icon.png', type: 'IMAGE' }
-    ],
-    product: {
-      productId: 104,
-      name: 'Color Theory Workbook',
-      price: 15.99,
-      seller: {
-        id: 'bio2',
-        name: 'Bob',
-        profileImage: require('../../../../assets/images/icon.png')
-      }
-    },
-    title: 'Color Theory Fundamentals',
-    description: 'Understanding color theory is essential for any artist. This guide explains color relationships, harmony, and how to create effective color palettes.',
-    createdAt: '2025-04-06T16:20:00'
-  }
-};
+// Define interfaces based on your backend response
+interface ContentPostResponse {
+  contentPostId: number;
+  title: string;
+  description: string;
+  productId: number;
+  createdAt: string;
+}
 
+interface ContentUrlResponse {
+  contentUrlId: number;
+  url: string;
+  contentPostId: number;
+}
+
+interface ContentItemWithUrls extends ContentPostResponse {
+  urls: ContentUrlResponse[];
+  imageUrls: ContentUrlResponse[];
+  videoUrls: ContentUrlResponse[];
+}
 
 export default function ContentPostDetails() {
-  const [contentPost, setContentPost] = useState(null);
+  const [contentPost, setContentPost] = useState<ContentItemWithUrls | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<ContentItemWithUrls[]>([]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { id } = useLocalSearchParams();
+  const { id, title, description, productId } = useLocalSearchParams();
   
-  useEffect(() => {
-    // In a real app, you would fetch from an API instead of using mock data
-    if (id && mockContentPosts[id]) {
-      setContentPost(mockContentPosts[id]);
+  // Replace with your actual backend URL
+  const BASE_URL = 'http://192.168.7.149:5454/'; // Update this with your actual backend URL
+
+  // Fetch content post details
+  const fetchContentPost = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (!id) {
+        throw new Error('No content post ID provided');
+      }
+
+      console.log('Fetching content post:', id);
+
+      // First, get the content post basic info (we might already have it from params)
+      let postData: ContentPostResponse;
+      
+      if (title && description && productId) {
+        // Use the data passed from navigation params
+        postData = {
+          contentPostId: parseInt(id as string),
+          title: title as string,
+          description: description as string,
+          productId: parseInt(productId as string),
+          createdAt: new Date().toISOString() // Fallback date
+        };
+      } else {
+        // Fetch from backend if not provided
+        const postResponse = await fetch(`${BASE_URL}content-posts/${id}`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!postResponse.ok) {
+          throw new Error(`Failed to fetch content post: ${postResponse.status}`);
+        }
+
+        postData = await postResponse.json();
+      }
+
+      // Fetch content URLs for this post
+      const urlsResponse = await fetch(`${BASE_URL}content-urls/content-post/${id}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!urlsResponse.ok) {
+        throw new Error(`Failed to fetch content URLs: ${urlsResponse.status}`);
+      }
+
+      const urls: ContentUrlResponse[] = await urlsResponse.json();
+      
+      // Separate image and video URLs
+      const imageUrls = urls.filter(url => 
+        url.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+      );
+      
+      const videoUrls = urls.filter(url => 
+        url.url.match(/\.(mp4|mov|avi|webm)$/i)
+      );
+
+      const contentPostWithUrls: ContentItemWithUrls = {
+        ...postData,
+        urls,
+        imageUrls,
+        videoUrls
+      };
+
+      setContentPost(contentPostWithUrls);
+      
+      // Fetch related posts (other posts from the same product or random posts)
+      fetchRelatedPosts();
+
+    } catch (err) {
+      console.error('Error fetching content post:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load content post');
+      Alert.alert('Error', 'Failed to load content post. Please try again.');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Fetch related posts
+  const fetchRelatedPosts = async () => {
+    try {
+      const postsResponse = await fetch(`${BASE_URL}content-posts/`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!postsResponse.ok) {
+        console.warn('Failed to fetch related posts');
+        return;
+      }
+
+      const posts: ContentPostResponse[] = await postsResponse.json();
+      
+      // Filter out current post and limit to 5 related posts
+      const filteredPosts = posts
+        .filter(post => post.contentPostId.toString() !== id)
+        .slice(0, 5);
+
+      // Get URLs for each related post
+      const relatedWithUrls = await Promise.all(
+        filteredPosts.map(async (post) => {
+          try {
+            const urlsResponse = await fetch(`${BASE_URL}content-urls/content-post/${post.contentPostId}`, {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!urlsResponse.ok) {
+              return {
+                ...post,
+                urls: [],
+                imageUrls: [],
+                videoUrls: []
+              };
+            }
+
+            const urls: ContentUrlResponse[] = await urlsResponse.json();
+            const imageUrls = urls.filter(url => 
+              url.url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+            );
+            const videoUrls = urls.filter(url => 
+              url.url.match(/\.(mp4|mov|avi|webm)$/i)
+            );
+
+            return {
+              ...post,
+              urls,
+              imageUrls,
+              videoUrls
+            };
+          } catch (error) {
+            console.warn(`Failed to fetch URLs for related post ${post.contentPostId}`);
+            return {
+              ...post,
+              urls: [],
+              imageUrls: [],
+              videoUrls: []
+            };
+          }
+        })
+      );
+
+      setRelatedPosts(relatedWithUrls);
+    } catch (error) {
+      console.warn('Error fetching related posts:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchContentPost();
     // Reset active image index when content changes
     setActiveImageIndex(0);
   }, [id]);
 
-  // If content not found or still loading
-  if (!contentPost) {
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
+    return `${Math.ceil(diffDays / 365)} years ago`;
+  };
+
+  // Retry function
+  const handleRetry = () => {
+    fetchContentPost();
+  };
+
+  // Loading state
+  if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading content...</Text>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Feather name="arrow-left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Content Details</Text>
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.loadingText}>Loading content...</Text>
+        </View>
       </View>
     );
   }
 
-  // Filter out image URLs for the carousel
-  const imageUrls = contentPost?.urls?.filter(url => url.type === 'IMAGE') || [];
-  
-  // Get the video URL if available
-  const videoUrl = contentPost?.urls?.find(url => url.type === 'VIDEO')?.url;
+  // Error state
+  if (error || !contentPost) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Feather name="arrow-left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Content Details</Text>
+        </View>
+        <View style={styles.errorContainer}>
+          <Feather name="alert-circle" size={48} color="#FF3B30" />
+          <Text style={styles.errorText}>Failed to load content</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
-      {/* Back button */}
-      <TouchableOpacity 
-        onPress={() => router.back()}
-      >
-        <Feather name="arrow-left" size={24} color="black" />
-      </TouchableOpacity>
+      {/* Header with back button */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Feather name="arrow-left" size={24} color="black" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Content Details</Text>
+      </View>
       
       {/* Content Header - Main Image/Video */}
       <View style={styles.mediaContainer}>
-        {imageUrls.length > 0 && (
+        {contentPost.imageUrls.length > 0 ? (
           <Image
-            source={{ uri: imageUrls[activeImageIndex].url }}
+            source={{ uri: contentPost.imageUrls[activeImageIndex].url }}
             style={styles.mainImage}
-            defaultSource={require('../../../../assets/images/icon.png')}
+            onError={(error) => {
+              console.warn('Failed to load image:', error);
+            }}
           />
+        ) : (
+          <View style={styles.placeholderImage}>
+            <Feather name="image" size={48} color="#8E8E93" />
+            <Text style={styles.placeholderText}>No image available</Text>
+          </View>
         )}
         
         {/* Image indicator dots */}
-        {imageUrls.length > 1 && (
+        {contentPost.imageUrls.length > 1 && (
           <View style={styles.indicatorContainer}>
-            {imageUrls.map((_, index) => (
+            {contentPost.imageUrls.map((_, index) => (
               <TouchableOpacity 
                 key={index} 
                 onPress={() => setActiveImageIndex(index)}
@@ -167,37 +317,32 @@ export default function ContentPostDetails() {
       {/* Content Info */}
       <View style={styles.contentInfo}>
         <Text style={styles.title}>{contentPost.title}</Text>
+        <Text style={styles.date}>{formatDate(contentPost.createdAt)}</Text>
         
-        {/* Creator Info */}
+        {/* Creator Info - Mock data for now */}
         <View style={styles.creatorContainer}>
           <TouchableOpacity 
             style={styles.creatorProfile}
             onPress={() => {
-              // Navigate to creator profile
-              router.push({
-                pathname: `/content/seller/${contentPost.product.seller.id}`,
-              });
+              // Navigate to creator profile - you can implement this when you have seller data
+              console.log('Navigate to creator profile');
+              
             }}
           >
-            <Image 
-              source={contentPost.product?.seller?.profileImage} 
-              style={styles.creatorImage}
-            />
+            <View style={styles.creatorImagePlaceholder}>
+              <Feather name="user" size={20} color="#8E8E93" />
+            </View>
             <View style={styles.creatorDetails}>
-              <Text style={styles.creatorName}>{contentPost.product?.seller?.name}</Text>
-              <Text style={styles.subscriberCount}>4.2M subscribers</Text>
+              <Text style={styles.creatorName}>Content Creator</Text>
+              <Text style={styles.subscriberCount}>Creator</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push({
-            pathname: '/seller/chat',
-            params: { 
-              senderName: contentPost.product?.seller?.name,
-              senderId: contentPost.product?.seller?.id
-            }
-          })}>
+          <TouchableOpacity onPress={() => {
+            // Navigate to chat - implement when you have seller data
+            console.log('Navigate to chat');
+          }}>
             <View style={styles.inboxIconContainer}>
-              <Text style={styles.inboxIcon}>✉️</Text>
+              <Feather name="message-circle" size={24} color="#007AFF" />
             </View>
           </TouchableOpacity>
         </View>
@@ -208,7 +353,7 @@ export default function ContentPostDetails() {
           onPress={() => {
             // Navigate to product details
             router.push({
-              pathname: `/products/${contentPost.product.productId}`,
+              pathname: `/products/${contentPost.productId}`,
             });
           }}
         >
@@ -217,52 +362,87 @@ export default function ContentPostDetails() {
             <Text style={styles.shopNow}>SHOP NOW</Text>
           </View>
           <View style={styles.productDetails}>
-            <Text style={styles.productName}>{contentPost.product?.name}</Text>
-            <Text style={styles.productPrice}>${contentPost.product?.price}</Text>
+            <Text style={styles.productName}>Product ID: {contentPost.productId}</Text>
+            <Feather name="external-link" size={16} color="#065FD4" />
           </View>
         </TouchableOpacity>
         
         {/* Description */}
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.descriptionTitle}>Description</Text>
-          <Text style={styles.description}>{contentPost.description}</Text>
-        </View>
+        {contentPost.description && (
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionTitle}>Description</Text>
+            <Text style={styles.description}>{contentPost.description}</Text>
+          </View>
+        )}
+
+        {/* Resources */}
+        {contentPost.urls.length > 0 && (
+          <View style={styles.resourcesContainer}>
+            <Text style={styles.resourcesTitle}>Resources ({contentPost.urls.length})</Text>
+            {contentPost.videoUrls.length > 0 && (
+              <Text style={styles.resourceItem}>
+                <Feather name="video" size={16} color="#007AFF" /> {contentPost.videoUrls.length} Video{contentPost.videoUrls.length !== 1 ? 's' : ''}
+              </Text>
+            )}
+            {contentPost.imageUrls.length > 0 && (
+              <Text style={styles.resourceItem}>
+                <Feather name="image" size={16} color="#007AFF" /> {contentPost.imageUrls.length} Image{contentPost.imageUrls.length !== 1 ? 's' : ''}
+              </Text>
+            )}
+          </View>
+        )}
       </View>
       
       {/* Related Content */}
-      <View style={styles.relatedContent}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>More from {contentPost.product?.seller?.name}</Text>
-          <TouchableOpacity>
-            <Text style={styles.moreButton}>MORE</Text>
-          </TouchableOpacity>
-        </View>
-        
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={[
-            { id: '1', title: 'Advanced Sketching Techniques', thumbnail: require('../../../../assets/images/icon.png') },
-            { id: '2', title: 'Color Theory for Digital Art', thumbnail: require('../../../../assets/images/icon.png') },
-            { id: '3', title: 'Creating Realistic Textures', thumbnail: require('../../../../assets/images/icon.png') }
-          ]}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity 
-              style={styles.relatedItem}
-              onPress={() => {
-                // Navigate to related content
-                router.push({
-                  pathname: `/content/post/${item.id}`,
-                });
-              }}
-            >
-              <Image source={item.thumbnail} style={styles.relatedThumbnail} />
-              <Text style={styles.relatedTitle} numberOfLines={2}>{item.title}</Text>
+      {relatedPosts.length > 0 && (
+        <View style={styles.relatedContent}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Related Content</Text>
+            <TouchableOpacity onPress={() => router.push('/content/posts')}>
+              <Text style={styles.moreButton}>MORE</Text>
             </TouchableOpacity>
-          )}
-        />
-      </View>
+          </View>
+          
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={relatedPosts}
+            keyExtractor={item => item.contentPostId.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity 
+                style={styles.relatedItem}
+                onPress={() => {
+                  router.push({
+                    pathname: `/content/post/[id]`,
+                    params: { 
+                      id: item.contentPostId.toString(),
+                      title: item.title,
+                      description: item.description,
+                      productId: item.productId.toString()
+                    },
+                  });
+                }}
+              >
+                {item.imageUrls.length > 0 ? (
+                  <Image 
+                    source={{ uri: item.imageUrls[0].url }} 
+                    style={styles.relatedThumbnail} 
+                    onError={() => {
+                      console.warn(`Failed to load related thumbnail: ${item.imageUrls[0].url}`);
+                    }}
+                  />
+                ) : (
+                  <View style={styles.relatedThumbnailPlaceholder}>
+                    <Feather name="image" size={24} color="#8E8E93" />
+                  </View>
+                )}
+                <Text style={styles.relatedTitle} numberOfLines={2}>{item.title}</Text>
+                <Text style={styles.relatedMeta}>{formatDate(item.createdAt)}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -272,10 +452,54 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    backgroundColor: '#fff',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 16,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#8E8E93',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  errorText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#FF3B30',
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
   mediaContainer: {
     position: 'relative',
@@ -287,6 +511,18 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  placeholderImage: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F2F2F7',
+  },
+  placeholderText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: '#8E8E93',
   },
   indicatorContainer: {
     position: 'absolute',
@@ -331,10 +567,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  creatorImage: {
+  creatorImagePlaceholder: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    backgroundColor: '#F2F2F7',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   creatorDetails: {
     marginLeft: 12,
@@ -348,12 +587,9 @@ const styles = StyleSheet.create({
     color: '#606060',
   },
   inboxIconContainer: {
-    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  inboxIcon: {
-    fontSize: 24,
+    padding: 8,
   },
   productContainer: {
     marginVertical: 16,
@@ -387,11 +623,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     flex: 1,
   },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#065FD4',
-  },
   descriptionContainer: {
     paddingVertical: 12,
     borderTopWidth: 1,
@@ -406,6 +637,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: '#303030',
+  },
+  resourcesContainer: {
+    paddingVertical: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  resourcesTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  resourceItem: {
+    fontSize: 14,
+    color: '#007AFF',
+    marginBottom: 4,
   },
   relatedContent: {
     backgroundColor: '#fff',
@@ -439,8 +685,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
+  relatedThumbnailPlaceholder: {
+    width: 160,
+    height: 90,
+    borderRadius: 8,
+    backgroundColor: '#F2F2F7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
   relatedTitle: {
     fontSize: 14,
     fontWeight: '500',
+    marginBottom: 4,
+  },
+  relatedMeta: {
+    fontSize: 12,
+    color: '#606060',
   },
 });
